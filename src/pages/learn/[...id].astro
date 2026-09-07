@@ -1,0 +1,51 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Button from '@/components/ui/Button.astro';
+import { site } from '@/config/site';
+export async function getStaticPaths() {
+  return (await getCollection('learn'))
+    .filter((p) => !p.data.draft)
+    .map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  article={post.data}
+  ><article>
+    <header class="wrap page-hero">
+      <div class="breadcrumbs">
+        <a href="/">Home</a> / <a href="/learn">Field notes</a> / {
+          post.data.category
+        }
+      </div><p class="eyebrow">{post.data.category}</p><h1>
+        {post.data.title}
+      </h1><p class="lead muted">{post.data.description}</p><p class="mono">
+        <a href="/about">{site.founder.name}</a> · <time
+          datetime={post.data.published}
+          >{
+            new Date(post.data.published).toLocaleDateString('en-GB', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              timeZone: 'UTC',
+            })
+          }</time
+        >
+      </p>
+    </header><div class="wrap section border-t border-[var(--line)]">
+      <div class="prose">
+        <Content /><aside class="notice mt-12">
+          <h2 class="!mt-0">Want a second set of eyes?</h2><p>
+            A Reality Check applies this thinking to your product and your next
+            stage.
+          </p><Button event="article_cta_clicked" />
+        </aside><a class="text-link mt-8" href="/learn">← More field notes</a>
+      </div>
+    </div>
+  </article></Base
+>

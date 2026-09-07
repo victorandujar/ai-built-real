@@ -1,0 +1,38 @@
+---
+import { site } from '@/config/site';
+import Button from '@/components/ui/Button.astro';
+---
+
+<header class="wrap">
+  <nav class="nav" aria-label="Main navigation">
+    <a class="brand" href="/" aria-label="AI-built to Real product home"
+      ><span class="brand-mark" aria-hidden="true">↳</span><span
+        >AI-built<span>Real product.</span></span
+      ></a
+    ><button
+      class="menu-button"
+      aria-expanded="false"
+      aria-controls="navigation">Menu</button
+    ><div class="nav-links" id="navigation">
+      {
+        site.navigation.map((item) => (
+          <a
+            href={item.href}
+            aria-current={Astro.url.pathname === item.href ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }<Button />
+    </div>
+  </nav>
+</header>
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.menu-button');
+  button?.addEventListener('click', () => {
+    const open = button.getAttribute('aria-expanded') !== 'true';
+    button.setAttribute('aria-expanded', String(open));
+    document.querySelector<HTMLElement>('#navigation')!.dataset.open =
+      String(open);
+  });
+</script>

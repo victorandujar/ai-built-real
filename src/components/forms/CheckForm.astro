@@ -1,0 +1,180 @@
+<div class="form-panel">
+  <noscript
+    ><p class="notice">
+      This form needs JavaScript to guide you through the questions. Please
+      enable it to send a request.
+    </p></noscript
+  ><form id="check-form" novalidate>
+    <p class="eyebrow" id="step-label" aria-live="polite">
+      Step 1 of 3 / Your product
+    </p><div class="form-progress" aria-hidden="true">
+      <span class="active"></span><span></span><span></span>
+    </div><fieldset data-step="0">
+      <legend tabindex="-1">What have you built?</legend><div class="field">
+        <label for="productUrl">Product URL</label><input
+          id="productUrl"
+          name="productUrl"
+          type="url"
+          autocomplete="url"
+          placeholder="https://your-product.com"
+          required
+          maxlength="2048"
+        /><p class="hint">A live link or publicly accessible preview.</p>
+      </div><div class="field">
+        <label for="description">What does your product do?</label><textarea
+          id="description"
+          name="description"
+          placeholder="Who is it for, and what does it help them do?"
+          required
+          minlength="10"
+          maxlength="3000"></textarea>
+      </div><div class="field">
+        <label for="tool">What did you build it with?</label><select
+          id="tool"
+          name="tool"
+          required
+          ><option value="">Choose your main tool</option>{
+            [
+              'Lovable',
+              'Cursor',
+              'Replit',
+              'Bolt',
+              'Claude Code',
+              'Codex',
+              'v0',
+              'Windsurf',
+              'Other',
+            ].map((t) => <option>{t}</option>)
+          }</select
+        >
+      </div>
+    </fieldset><fieldset data-step="1" hidden disabled>
+      <legend tabindex="-1">What's coming next?</legend><div class="field-grid">
+        {
+          [
+            [
+              'users',
+              'Do you already have users?',
+              ['No', 'Beta users', 'Yes'],
+            ],
+            ['payments', 'Taking payments?', ['No', 'Soon', 'Yes']],
+            [
+              'data',
+              'Handles customer or personal data?',
+              ['Yes', 'No', 'Not sure'],
+            ],
+            [
+              'next',
+              'What are you planning next?',
+              [
+                'Private testing',
+                'Public beta',
+                'Launch',
+                'Start charging',
+                'Scale existing users',
+                'Other',
+              ],
+            ],
+          ].map(([id, label, options]) => (
+            <div class="field">
+              <>
+                <label for={id as string}>{label}</label>
+                <select id={id as string} name={id as string} required>
+                  <option value="">Choose one</option>
+                  {(options as string[]).map((o) => (
+                    <option>{o}</option>
+                  ))}
+                </select>
+              </>
+            </div>
+          ))
+        }
+      </div><div class="field">
+        <label for="uncertainty">What are you most unsure about?</label
+        ><textarea
+          name="uncertainty"
+          id="uncertainty"
+          required
+          minlength="5"
+          maxlength="3000"
+          placeholder="The thing you'd like a second pair of eyes on."
+        ></textarea>
+      </div><div class="field">
+        <label for="repository"
+          >Repository URL <span class="muted">(optional)</span></label
+        ><input
+          id="repository"
+          name="repository"
+          type="url"
+          maxlength="2048"
+        /><p class="hint">
+          No access needed yet. Don't include credentials, API keys or customer
+          data.
+        </p>
+      </div>
+    </fieldset><fieldset data-step="2" hidden disabled>
+      <legend tabindex="-1">Who should we reply to?</legend><div class="field">
+        <label for="name">Your name</label><input
+          id="name"
+          name="name"
+          required
+          minlength="2"
+          maxlength="100"
+          autocomplete="name"
+        />
+      </div><div class="field">
+        <label for="email">Email</label><input
+          id="email"
+          name="email"
+          type="email"
+          required
+          maxlength="254"
+          autocomplete="email"
+        />
+      </div><div class="field">
+        <label class="check-label"
+          ><input type="checkbox" name="consent" required /><span
+            >I have read the <a href="/privacy" class="underline"
+              >privacy notice</a
+            > and agree to be contacted about this request.</span
+          ></label
+        >
+      </div><p class="hint">
+        Sending this request is free. We agree any paid work with you first.
+      </p>
+    </fieldset><div class="hp" aria-hidden="true">
+      <label for="website">Leave this field empty</label><input
+        name="website"
+        id="website"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div><p id="form-error" class="error" role="alert"></p><div
+      class="form-actions"
+    >
+      <button type="button" class="button outline" id="back" hidden
+        >← Back</button
+      ><button type="button" class="button" id="next-button"
+        >Continue <span aria-hidden="true">→</span></button
+      ><button type="submit" class="button" id="submit" hidden
+        >Check my product <span aria-hidden="true">↗</span></button
+      >
+    </div>
+  </form><div
+    class="success"
+    id="form-success"
+    role="status"
+    tabindex="-1"
+    hidden
+  >
+    <p class="eyebrow">Request received</p><h2>You're on our radar.</h2><p
+      class="muted mt-6"
+    >
+      We'll review what you've shared and reply by email to discuss the fit,
+      scope and next steps.
+    </p><a href="/learn" class="text-link"
+      >Something useful while you're here ↗</a
+    >
+  </div>
+</div>
+<script src="@/lib/check-form.ts"></script>

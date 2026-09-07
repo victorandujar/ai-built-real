@@ -1,0 +1,24 @@
+---
+import { coverage } from '@/config/coverage';
+---
+
+<div class="coverage">
+  {
+    coverage.map(([category, title, description], i) => (
+      <details open={i === 0}>
+        <>
+          <summary>
+            <span>
+              <>
+                <small class="mono">0{i + 1}</small>
+                <strong>{category}</strong>
+              </>
+            </span>
+          </summary>
+          <h3 class="mb-4">{title}</h3>
+          <p>{description}</p>
+        </>
+      </details>
+    ))
+  }
+</div>

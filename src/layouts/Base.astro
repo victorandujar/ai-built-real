@@ -1,0 +1,45 @@
+---
+import '@/styles/global.css';
+import Header from '@/components/navigation/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SEO from '@/components/seo/SEO.astro';
+interface Props {
+  title: string;
+  description?: string;
+  noindex?: boolean;
+  article?: {
+    title: string;
+    description: string;
+    published: string;
+    updated?: string;
+  };
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head
+    ><meta charset="UTF-8" /><meta
+      name="viewport"
+      content="width=device-width,initial-scale=1"
+    /><meta name="theme-color" content="#223b2d" /><SEO {...Astro.props} /><link
+      rel="icon"
+      href="/favicon.svg"
+      type="image/svg+xml"
+    /><link rel="icon" href="/icon.png" type="image/png" sizes="192x192" /><link
+      rel="apple-touch-icon"
+      href="/apple-touch-icon.png"
+    /><link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Real product field notes"
+      href="/rss.xml"
+    /></head
+  ><body
+    ><a class="skip" href="#main">Skip to content</a><Header /><main id="main">
+      <slot />
+    </main><Footer /><script>
+      import '@/lib/analytics';
+    </script></body
+  >
+</html>

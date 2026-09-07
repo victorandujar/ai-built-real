@@ -1,0 +1,198 @@
+---
+import Base from '@/layouts/Base.astro';
+import Hero from '@/components/sections/Hero.astro';
+import Closing from '@/components/sections/Closing.astro';
+import Coverage from '@/components/reality/Coverage.astro';
+import Report from '@/components/reality/Report.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('learn'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title="You built it with AI. Now make it real."
+  ><Hero />
+  <section class="wrap section split">
+    <p class="eyebrow">01 / A new kind of builder</p><div>
+      <p class="belief">
+        You had an idea.<br />And this time, you built it.<br /><span
+          >That's a big deal.</span
+        >
+      </p><p class="lead muted mt-8">
+        AI changed who gets to build. We think that's extraordinary. You have
+        something that works. Now you're getting ready to let other people in.
+      </p>
+    </div>
+  </section>
+  <section class="dark section">
+    <div class="wrap">
+      <p class="eyebrow">02 / Then reality enters the room</p><div
+        class="section-heading"
+      >
+        <h2>It works for you.<br />What about everyone else?</h2><p
+          class="muted"
+        >
+          The next stage brings questions that a working demo can't answer.
+        </p>
+      </div><div class="reality-lines">
+        {
+          [
+            [
+              '01',
+              'Real users.',
+              'Can a stranger get from sign-up to their first useful result?',
+            ],
+            [
+              '02',
+              'Real data.',
+              'Can one customer see something that belongs to another?',
+            ],
+            [
+              '03',
+              'Real payments.',
+              'What happens if someone pays, but access never arrives?',
+            ],
+            [
+              '04',
+              'Real life.',
+              'When something breaks, will you know what happened?',
+            ],
+          ].map(([n, title, copy]) => (
+            <div class="reality-line">
+              <>
+                <span class="mono">{n}</span>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <section class="wrap section" id="what-we-check">
+    <div class="split">
+      <div>
+        <p class="eyebrow">03 / The Reality Check</p><h2>
+          A second set of eyes.<br />On the whole product.
+        </h2><p class="lead muted mt-8">
+          A focused human review of what you've built and what you're about to
+          ask it to do.
+        </p><p class="muted">
+          We look at the experience, the code and the way it runs. Then tell you
+          what matters for your next step.
+        </p><a class="text-link" href="/reality-check"
+          >Inside the Reality Check <span aria-hidden="true">↗</span></a
+        >
+      </div><Coverage />
+    </div>
+  </section>
+  <section class="wrap section border-t border-[var(--line)]">
+    <div class="split">
+      <Report /><div>
+        <p class="eyebrow">04 / Clarity you can act on</p><h2>
+          A clear next move.<br />Not a 60-page PDF.
+        </h2><p class="lead muted mt-8">
+          What blocks your next release. What to fix soon. What's already good
+          enough.
+        </p><p class="muted">
+          Every finding has evidence, an explanation and a next action. You
+          leave with priorities you can use yourself, with AI or with us.
+        </p><div class="outcomes">
+          <span>Ship</span><span>Ship after fixes</span><span>Keep testing</span
+          ><span>Rethink foundation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section dark">
+    <div class="wrap split">
+      <p class="eyebrow">05 / Human judgement, AI included</p><div>
+        <h2>“Couldn't I<br />just ask AI?”</h2><p class="lead mt-8">
+          Absolutely. We do too.
+        </p><p class="muted">
+          The hard part is deciding which answer matters for your product, your
+          users and your next launch. Someone needs to follow the evidence, test
+          the assumptions and stand behind the recommendation.
+        </p><p>That's the part we bring.</p>
+      </div>
+    </div>
+  </section>
+  <section class="wrap section">
+    <p class="eyebrow">06 / From here to shipped</p><h2>
+      One check.<br />A practical way forward.
+    </h2><div class="steps">
+      <div class="step">
+        <span class="mono">01</span><h3>Reality Check</h3><p class="muted">
+          Show us what you've built. We'll agree the scope and fee, review the
+          product, and walk you through a short, prioritised report.
+        </p>
+      </div><div class="step">
+        <span class="mono">02</span><h3>
+          Reality Sprint <span class="mono">/ optional</span>
+        </h3><div>
+          <p class="muted">
+            Want help with the fixes? We agree a focused scope, work through the
+            important issues and verify the changes.
+          </p><a
+            href="/check?interest=sprint"
+            class="text-link mt-4"
+            data-event="reality_sprint_clicked">Explore a sprint ↗</a
+          >
+        </div>
+      </div><div class="step">
+        <span class="mono">03</span><h3>Ship. Keep building.</h3><p
+          class="muted"
+        >
+          Take the next step with a clearer view of what works, what needs
+          attention and what can wait. The product stays yours.
+        </p>
+      </div>
+    </div>
+  </section>
+  <section class="wrap section border-t border-[var(--line)]">
+    <div class="split">
+      <div>
+        <p class="eyebrow">Made for this exact moment</p><h2>
+          First product?<br />First users?<br />You're in the right place.
+        </h2>
+      </div><div>
+        <p class="lead">
+          Built with Lovable, Cursor, Replit, Bolt, v0 or prompts and
+          persistence? Welcome.
+        </p><p class="muted">
+          You have a functional product. You're approaching a beta, a launch,
+          your first paying customers or your next stage of growth. You want a
+          useful answer to “is it ready?”
+        </p><div class="founder-line">
+          <strong>Víctor Andújar</strong><span
+            >Product engineer. The human behind Real product.</span
+          >
+        </div><a href="/about" class="text-link mt-6"
+          >Meet the person behind the check ↗</a
+        >
+      </div>
+    </div>
+  </section>
+  <section class="wrap section border-t border-[var(--line)]">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Field notes / Before you ship</p><h2>
+          A little more clarity.
+        </h2>
+      </div><a class="text-link" href="/learn">All field notes ↗</a>
+    </div><div class="note-list">
+      {
+        posts.map((p) => (
+          <a class="note-link" href={`/learn/${p.id}`}>
+            <>
+              <span class="mono">{p.data.category}</span>
+              <h3>{p.data.title}</h3>
+              <span aria-hidden="true">↗</span>
+            </>
+          </a>
+        ))
+      }
+    </div>
+  </section><Closing /></Base
+>

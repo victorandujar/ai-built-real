@@ -1,0 +1,134 @@
+---
+import { site, absolute } from '@/config/site';
+interface Props {
+  title: string;
+  description?: string;
+  noindex?: boolean;
+  article?: {
+    title: string;
+    description: string;
+    published: string;
+    updated?: string;
+  };
+}
+const {
+  title,
+  description = site.description,
+  noindex = false,
+  article,
+} = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const canonical = absolute(path);
+const fullTitle = `${title} | ${site.shortName}`;
+const org = {
+  '@type': 'Organization',
+  '@id': absolute('/#organization'),
+  name: site.name,
+  url: site.url,
+  logo: absolute('/icon.png'),
+  founder: { '@id': absolute('/about#person') },
+};
+const graph: Record<string, unknown>[] = [
+  org,
+  {
+    '@type': 'WebSite',
+    '@id': absolute('/#website'),
+    url: site.url,
+    name: site.name,
+    inLanguage: 'en',
+    publisher: { '@id': absolute('/#organization') },
+  },
+];
+if (path !== '/')
+  graph.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: absolute('/') },
+      ...(path.startsWith('/learn/')
+        ? [
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Field notes',
+              item: absolute('/learn'),
+            },
+          ]
+        : []),
+      {
+        '@type': 'ListItem',
+        position: path.startsWith('/learn/') ? 3 : 2,
+        name: title,
+        item: canonical,
+      },
+    ],
+  });
+if (path === '/about')
+  graph.push({
+    '@type': 'Person',
+    '@id': absolute('/about#person'),
+    name: site.founder.name,
+    jobTitle: site.founder.role,
+    url: absolute('/about'),
+  });
+if (path === '/' || path === '/reality-check')
+  graph.push({
+    '@type': 'Service',
+    name: 'Reality Check',
+    serviceType: 'Product readiness review for AI-built products',
+    url: absolute('/reality-check'),
+    provider: { '@id': absolute('/#organization') },
+    description: site.description,
+  });
+if (article)
+  graph.push({
+    '@type': 'Article',
+    headline: article.title,
+    description: article.description,
+    datePublished: article.published,
+    ...(article.updated ? { dateModified: article.updated } : {}),
+    author: {
+      '@type': 'Person',
+      name: site.founder.name,
+      url: absolute('/about'),
+    },
+    publisher: { '@id': absolute('/#organization') },
+    image: absolute('/og.png'),
+    mainEntityOfPage: canonical,
+  });
+---
+
+<title>{fullTitle}</title><meta name="description" content={description} /><link
+  rel="canonical"
+  href={canonical}
+/><meta
+  name="robots"
+  content={noindex || !site.launchReady ? 'noindex, follow' : 'index, follow'}
+/><meta property="og:type" content={article ? 'article' : 'website'} /><meta
+  property="og:title"
+  content={fullTitle}
+/><meta property="og:description" content={description} /><meta
+  property="og:url"
+  content={canonical}
+/><meta property="og:site_name" content={site.name} /><meta
+  property="og:locale"
+  content="en_US"
+/><meta property="og:image" content={absolute('/og.png')} /><meta
+  property="og:image:width"
+  content="1200"
+/><meta property="og:image:height" content="630" /><meta
+  property="og:image:alt"
+  content="AI-built. Real product. Ready for what comes next."
+/><meta name="twitter:card" content="summary_large_image" /><meta
+  name="twitter:title"
+  content={fullTitle}
+/><meta name="twitter:description" content={description} /><meta
+  name="twitter:image"
+  content={absolute('/og.png')}
+/><script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': graph,
+  }).replace(/</g, '\u003c')}
+/>

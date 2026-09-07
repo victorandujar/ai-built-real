@@ -1,0 +1,14 @@
+---
+import { site } from '@/config/site';
+interface Props {
+  href?: string;
+  label?: string;
+  light?: boolean;
+  event?: string;
+}
+const { href = '/check', label = site.cta, light = false, event } = Astro.props;
+---
+
+<a href={href} class:list={['button', { light }]} data-event={event}
+  >{label}<span aria-hidden="true" class="arrow">↗</span></a
+>

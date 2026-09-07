@@ -1,0 +1,34 @@
+---
+import Base from '@/layouts/Base.astro';
+import CheckForm from '@/components/forms/CheckForm.astro';
+import ScanPreview from '@/components/reality/ScanPreview.astro';
+import { site } from '@/config/site';
+---
+
+<Base
+  title="Start your Reality Check"
+  description="Show us your AI-built product and what you plan to do next. Start a conversation about a focused human product readiness review."
+  noindex
+  ><section class="wrap page-hero">
+    <p class="eyebrow">Reality Check / Start here</p><h1>
+      Show us what<br />you've built.
+    </h1>
+  </section><section class="wrap form-layout">
+    <div>
+      <p class="lead">
+        A few questions about your product and what's coming next.
+      </p><p class="muted">
+        No pitch deck. No technical vocabulary required. Just enough context to
+        make the next conversation useful.
+      </p><div class="founder-line">
+        <strong>What happens after this?</strong><p class="hint">
+          Víctor reviews the fit and replies by email. You agree the scope,
+          timing and fee before any paid work begins.
+        </p>
+      </div><p class="hint mt-8">
+        Please don't include passwords, API keys or personal data belonging to
+        your customers.
+      </p>{site.features.publicScan && <ScanPreview />}
+    </div><CheckForm />
+  </section></Base
+>

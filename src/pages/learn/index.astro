@@ -1,0 +1,40 @@
+---
+import Base from '@/layouts/Base.astro';
+import Closing from '@/components/sections/Closing.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('learn'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base
+  title="Field notes for AI builders"
+  description="Practical guides to launching an AI-built product: production readiness, launch checks and the things that change when real users arrive."
+  ><section class="wrap page-hero">
+    <p class="eyebrow">Field notes / Before you ship</p><h1>
+      Less guesswork.<br />More ready.
+    </h1><p class="lead muted">
+      Practical notes for the space between “it works” and “people are using
+      it”.
+    </p>
+  </section><section class="wrap section">
+    <div class="note-list">
+      {
+        posts.map((p) => (
+          <a class="note-link" href={`/learn/${p.id}`}>
+            <>
+              <span class="mono">{p.data.category}</span>
+              <div>
+                <>
+                  <h2 class="!text-3xl">{p.data.title}</h2>
+                  <p class="muted mt-4 mb-0">{p.data.description}</p>
+                </>
+              </div>
+              <span aria-hidden="true">↗</span>
+            </>
+          </a>
+        ))
+      }
+    </div>
+  </section><Closing /></Base
+>

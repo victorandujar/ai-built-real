@@ -1,0 +1,43 @@
+---
+import Button from '@/components/ui/Button.astro';
+---
+
+<section class="wrap hero">
+  <p class="eyebrow">
+    <span class="dot"></span> Product readiness for AI builders
+  </p><div class="hero-grid">
+    <div>
+      <h1>You built it<br />with AI.<br /><em>Now make it real.</em></h1><p
+        class="lead"
+      >
+        A working app is a brilliant start. We help you turn it into a product
+        ready for real users, real data and real payments.
+      </p><div class="actions">
+        <Button event="hero_cta_clicked" /><a
+          href="/reality-check"
+          class="text-link"
+          >See what we check <span aria-hidden="true">↓</span></a
+        >
+      </div><p class="hero-note">
+        Human judgement. Clear priorities. No unnecessary rebuild.
+      </p>
+    </div><div class="specimen" aria-hidden="true">
+      <div class="axis">
+        <span>Fig. 01 / The transition</span><span>Prototype → Product</span>
+      </div><div class="frame-stack">
+        {[0, 1, 2, 3, 4].map((i) => <i style={`--i:${i}`} />)}<div
+          class="solid"
+        >
+          <b>↳</b><small>Ready for reality.</small>
+        </div>
+      </div><div class="axis bottom">
+        <span>Built by you.</span><span>Ready for what's next.</span>
+      </div>
+    </div>
+  </div><div class="tool-strip">
+    <p class="mono">However you<br />got here.</p><div class="tool-names">
+      <span>Lovable</span><span>Cursor</span><span>Replit</span><span>Bolt</span
+      ><span>Claude Code</span><span>Codex</span><span>+ your stack</span>
+    </div>
+  </div>
+</section>
