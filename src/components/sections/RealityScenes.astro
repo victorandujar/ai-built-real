@@ -1,0 +1,144 @@
+---
+const scenes = [
+  {
+    name: 'The first stranger.',
+    title: 'You are no longer there to explain it.',
+    copy: 'Someone opens your product with no context, no instructions and very little patience. Can they find their first useful result?',
+    label: '01 / THE EXPERIENCE',
+    from: 'Your familiar workflow',
+    to: 'Their very first visit',
+    note: 'Follow the journey with a fresh account.',
+    kind: 'users',
+  },
+  {
+    name: 'The second account.',
+    title: 'Two customers. Two separate worlds.',
+    copy: 'A product can look private and still expose the wrong information. We check what a second account can actually see and change.',
+    label: '02 / THE BOUNDARIES',
+    from: 'Customer A',
+    to: 'Customer B',
+    note: 'Check access where the data lives.',
+    kind: 'data',
+  },
+  {
+    name: 'The interrupted payment.',
+    title: 'Paid. But did the product catch up?',
+    copy: 'Checkout is only part of the story. The payment can succeed while access fails, or the same event can arrive twice. Recovery matters.',
+    label: '03 / THE HANDOFF',
+    from: 'Payment accepted',
+    to: 'Access granted?',
+    note: 'Trace the handoff, including the unhappy path.',
+    kind: 'payments',
+  },
+  {
+    name: 'The unexpected Tuesday.',
+    title: 'Something breaks. Who notices?',
+    copy: 'An expired key. A slow dependency. A release that changes a small assumption. We look for enough visibility to understand what happened.',
+    label: '04 / THE EVERYDAY',
+    from: 'Something changed',
+    to: 'Someone knows',
+    note: 'Make failure visible and recovery possible.',
+    kind: 'life',
+  },
+];
+---
+
+<section class="reality-stage" data-scenes>
+  <div class="wrap">
+    <div class="chapter-line">
+      <span class="mono">01 / Out in the world</span><span class="mono"
+        >A working demo is a beginning.</span
+      >
+    </div>
+    <div class="scene-heading">
+      <h2>Then reality<br /><em>walks in.</em></h2><p>
+        Your product meets the things<br />you couldn't prompt away.
+      </p>
+    </div>
+    <div class="scene-layout">
+      <div
+        class="scene-switches"
+        role="tablist"
+        aria-label="Real-world product moments"
+      >
+        {
+          scenes.map((s, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`scene-tab-${i}`}
+              aria-controls={`scene-panel-${i}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+            >
+              <>
+                <span class="mono">0{i + 1}</span>
+                <span>{s.name}</span>
+                <span aria-hidden="true">↗</span>
+              </>
+            </button>
+          ))
+        }
+      </div>
+      <div class="scene-panels">
+        {
+          scenes.map((s, i) => (
+            <article
+              role="tabpanel"
+              id={`scene-panel-${i}`}
+              aria-labelledby={`scene-tab-${i}`}
+              tabindex="0"
+              hidden={i !== 0}
+            >
+              <div
+                class={`scene-specimen specimen-${s.kind}`}
+                aria-hidden="true"
+              >
+                <>
+                  <span class="specimen-label mono">{s.label}</span>
+                  <div class="specimen-objects">
+                    <>
+                      <div class="specimen-piece piece-a">
+                        <>
+                          <i />
+                          <i />
+                          <span>{s.from}</span>
+                        </>
+                      </div>
+                      <div class="specimen-bridge">
+                        <span>→</span>
+                      </div>
+                      <div class="specimen-piece piece-b">
+                        <>
+                          <i />
+                          <i />
+                          <span>{s.to}</span>
+                        </>
+                      </div>
+                    </>
+                  </div>
+                  <span class="specimen-foot mono">ILLUSTRATIVE SCENARIO</span>
+                </>
+              </div>
+              <div class="scene-caption">
+                <>
+                  <h3>{s.title}</h3>
+                  <p>{s.copy}</p>
+                  <span class="scene-footnote">↳ {s.note}</span>
+                </>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+    <noscript
+      ><p class="scene-noscript">
+        We also review separation between accounts, payment recovery and
+        visibility when something breaks. <a href="/reality-check"
+          >Explore the full review.</a
+        >
+      </p></noscript
+    >
+  </div>
+</section>

@@ -5,7 +5,9 @@ const form = document.querySelector<HTMLFormElement>('#check-form');
 if (form) {
   enhanceSelects(form);
   const guidance = form.querySelector<HTMLElement>('#step-guidance')!;
-  const requestObject = document.querySelector<HTMLElement>('[data-request-object]');
+  const requestObject = document.querySelector<HTMLElement>(
+    '[data-request-object]',
+  );
   let sendTimer: ReturnType<typeof setTimeout> | undefined;
   type Field = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
   const steps = Array.from(
@@ -90,7 +92,8 @@ if (form) {
     }
     if (first) {
       focusField(first);
-      guidance.textContent = 'A little more detail needed. Check the highlighted fields.';
+      guidance.textContent =
+        'A little more detail needed. Check the highlighted fields.';
       return false;
     }
     return true;
@@ -98,10 +101,18 @@ if (form) {
   function show() {
     form!.dispatchEvent(new CustomEvent('choices:close'));
     form!.dataset.state = 'editing';
-    guidance.textContent = ['Three small steps. Start with your product.', 'A little context helps us focus the review.', 'One last step. Review your brief and leave your email.'][current];
+    guidance.textContent = [
+      'Three small steps. Start with your product.',
+      'A little context helps us focus the review.',
+      'One last step. Review your brief and leave your email.',
+    ][current];
     if (requestObject) {
       requestObject.dataset.stage = String(current);
-      requestObject.querySelector('[data-brief-caption]')!.textContent = ['01 — Start with what you built.', '02 — Give it a direction.', '03 — Put a person behind it.'][current];
+      requestObject.querySelector('[data-brief-caption]')!.textContent = [
+        '01 — Start with what you built.',
+        '02 — Give it a direction.',
+        '03 — Put a person behind it.',
+      ][current];
     }
     steps.forEach((step, i) => {
       step.hidden = i !== current;
@@ -197,16 +208,27 @@ if (form) {
     form!.dispatchEvent(new CustomEvent('choices:close'));
     if (value) {
       form!.dataset.state = 'sending';
-      form!.querySelector('#sending-message')!.textContent = 'Sending your request. Please keep this tab open.';
-      sendTimer = setTimeout(() => { form!.querySelector('#sending-message')!.textContent = 'Still waiting for confirmation. Your details are safe here.'; }, 6000);
-    } else { clearTimeout(sendTimer); }
+      form!.querySelector('#sending-message')!.textContent =
+        'Sending your request. Please keep this tab open.';
+      sendTimer = setTimeout(() => {
+        form!.querySelector('#sending-message')!.textContent =
+          'Still waiting for confirmation. Your details are safe here.';
+      }, 6000);
+    } else {
+      clearTimeout(sendTimer);
+    }
     sending.hidden = !value;
     label.textContent = value ? 'Sending…' : 'Send my request';
     icon.classList.toggle('spinner', value);
     icon.textContent = value ? '' : '↗';
   }
-  form.querySelector('#edit-brief')?.addEventListener('click', () => { if (!busy) { current = 0; show(); } });
-  form.addEventListener('submit' , async (e) => {
+  form.querySelector('#edit-brief')?.addEventListener('click', () => {
+    if (!busy) {
+      current = 0;
+      show();
+    }
+  });
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (busy) return;
     if (current < 2) {
@@ -264,6 +286,12 @@ if (form) {
         throw new Error(
           result.message ||
             'The service is temporarily unavailable. Your details are still here; please try again.',
+        );
+      }
+      if (typeof result.message !== 'string' || !result.message.trim()) {
+        alertTitle.textContent = 'We couldn’t confirm delivery.';
+        throw new Error(
+          'The server returned an unexpected response. Your details are still here. Please try again.',
         );
       }
       submitted = true;

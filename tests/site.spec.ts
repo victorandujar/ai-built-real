@@ -1,5 +1,9 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+async function choose(page: Page, name: string, value: string) {
+  await page.getByRole('combobox', { name, exact: true }).click();
+  await page.getByRole('option', { name: value, exact: true }).click();
+}
 const routes = [
   '/',
   '/reality-check',
@@ -88,16 +92,12 @@ async function fill(page: Page) {
   await page
     .getByLabel('What does your product do?')
     .fill('A scheduling product for independent makers.');
-  await page.getByLabel('What did you build it with?').selectOption('Lovable');
+  await choose(page, 'What did you build it with?', 'Lovable');
   await page.getByRole('button', { name: 'Continue' }).click();
-  await page
-    .getByLabel('Do you already have users?')
-    .selectOption('Beta users');
-  await page.getByLabel('Taking payments?').selectOption('Soon');
-  await page
-    .getByLabel('Handles customer or personal data?')
-    .selectOption('Yes');
-  await page.getByLabel('What are you planning next?').selectOption('Launch');
+  await choose(page, 'Do you already have users?', 'Beta users');
+  await choose(page, 'Taking payments?', 'Soon');
+  await choose(page, 'Handles customer or personal data?', 'Yes');
+  await choose(page, 'What are you planning next?', 'Launch');
   await page
     .getByLabel('What are you most unsure about?')
     .fill('Account boundaries and checkout recovery.');
@@ -109,6 +109,16 @@ async function fill(page: Page) {
 test('form validation, backwards navigation and unavailable delivery retain data', async ({
   page,
 }) => {
+  // UI tests never contact real delivery, even when local credentials exist.
+  await page.route('**/api/leads', (route) =>
+    route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        message: 'We could not confirm delivery. Your entries are still here.',
+      }),
+    }),
+  );
   await page.goto('/check');
   await page.getByRole('button', { name: 'Continue' }).click();
   await expect(page.locator('[data-step="0"]')).toBeVisible();
@@ -130,16 +140,21 @@ test('form validation, backwards navigation and unavailable delivery retain data
 test('success UI only follows confirmed server response (mock transport)', async ({
   page,
 }) => {
-  await page.route('**/api/leads', (route) =>
-    route.fulfill({
+  await page.route('**/api/leads', async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    return route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({ message: 'Request received' }),
-    }),
-  );
+    });
+  });
   await fill(page);
   await page.getByRole('button', { name: 'Send my request' }).click();
+  await expect(page.getByRole('button', { name: 'Sending…' })).toBeDisabled();
   await expect(page.locator('#form-success')).toBeVisible();
+  await expect(page.locator('#success-email')).toHaveText(
+    'builder@example.org',
+  );
   await expect(page.locator('#check-form')).toBeHidden();
 });
 test('API rejects cross-origin, malformed, oversized and honeypot input', async ({
@@ -177,4 +192,57 @@ test('mobile menu and keyboard skip navigation', async ({ page }) => {
     .first()
     .click();
   await expect(page).toHaveURL(/reality-check/);
+});
+
+test('custom select supports keyboard selection and error focus', async ({
+  page,
+}) => {
+  await page.goto('/check');
+  await page
+    .getByLabel('Product URL', { exact: true })
+    .fill('https://example.org');
+  await page
+    .getByLabel('What does your product do?')
+    .fill('A scheduling product for makers.');
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  const combo = page.getByRole('combobox', {
+    name: 'What did you build it with?',
+  });
+  await expect(combo).toBeFocused();
+  await expect(combo).toHaveAttribute('aria-invalid', 'true');
+  await combo.press('Enter');
+  await combo.press('c');
+  await combo.press('Enter');
+  await expect(combo).toHaveText(/Cursor/);
+  await expect(combo).toHaveAttribute('aria-expanded', 'false');
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await expect(page.locator('[data-request-object]')).toHaveAttribute(
+    'data-stage',
+    '1',
+  );
+});
+
+test('home scenes are keyboard accessible and review lenses disclose one at a time', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const first = page.getByRole('tab', { name: '01 The first stranger.' });
+  await first.focus();
+  await first.press('ArrowRight');
+  await expect(
+    page.getByRole('tab', { name: '02 The second account.' }),
+  ).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tabpanel')).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Two customers. Two separate worlds.' }),
+  ).toBeVisible();
+  await page
+    .locator('.lens-list summary')
+    .filter({ hasText: 'Engineering' })
+    .click();
+  await expect(page.locator('.lens-list details[open]')).toHaveCount(1);
+  await expect(
+    page.getByRole('heading', { name: 'Can you keep building on it?' }),
+  ).toBeVisible();
+  await expect(page.locator('.journal-volume')).toHaveCount(3);
 });

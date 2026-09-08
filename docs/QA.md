@@ -28,3 +28,13 @@ No Resend API key was configured and no live email was sent. Provider acceptance
 ## Reproduce
 
 Start the local server on 4330, install Playwright Chromium, then run npm test. If browsers are stored in work/browsers, use PLAYWRIGHT_BROWSERS_PATH=./work/browsers npm test. Run npm run qa for types, formatting and build. See RESEND.md for delivery activation and README.md for launch requirements.
+
+## Form interaction refinement — 8 September, afternoon
+
+Added progressively enhanced select-only comboboxes with native form values, selected marks, keyboard arrows/Home/End, type-to-select, Escape, outside-click dismissal and upward opening near the viewport edge. Added a CSS 3D brief whose three layers follow the form stages, plus dimensional paper treatment for illustrative reports. These additions do not load another WebGL engine.
+
+In-app browser verification: missing selection focuses the combobox; keyboard selection works; all three steps preserve selections; Edit details returns to step one with values intact. Open menus and the staged brief were inspected on mobile and desktop; form screenshots were inspected at 375, 768, 1440 and 1920. The report was inspected on the home page. Reduced-motion rules disable the new transitions.
+
+Astro check: 52 files, no errors/warnings/hints. Formatting and production build passed. API-only Playwright test passed independently. Full browser execution remains blocked by the same macOS Chromium startup restriction; no claim of automated accessibility or success-state verification is made. Browser regression tests now mock both delivery failure and success to avoid sending real email with local credentials. The success test includes pending state and displayed reply address assertions.
+
+Form changes include explicit editing/sending/error/success state, completed-step marks, editable summary, delayed-send guidance, preserved values after errors and rejection of unexpected success response bodies. No real email was sent for these UI checks.
