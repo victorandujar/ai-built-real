@@ -5,6 +5,7 @@ export interface LeadProvider {
   submit(lead: Lead, id: string): Promise<void>;
 }
 export class ProviderUnavailable extends Error {}
+export class SenderDomainUnverified extends Error {}
 const labels: Record<string, string> = {
   name: 'Name',
   email: 'Email',
@@ -46,6 +47,10 @@ export const leadProvider: LeadProvider = {
       },
       { idempotencyKey: id },
     );
+    if (error && /domain.*not verified/i.test(error.message))
+      throw new SenderDomainUnverified(
+        'Sender domain is not verified in Resend',
+      );
     if (error || !data?.id)
       throw new Error('Email provider did not confirm acceptance');
   },

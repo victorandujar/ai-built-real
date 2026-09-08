@@ -1,5 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
+import RequestObject from '@/components/brand/RequestObject.astro';
 import CheckForm from '@/components/forms/CheckForm.astro';
 import { site } from '@/config/site';
 ---
@@ -18,7 +19,7 @@ import { site } from '@/config/site';
         together.
       </p><div class="check-facts">
         <span>About 3 minutes</span><span>No payment required</span>
-      </div><div class="founder-line">
+      </div><RequestObject /><div class="founder-line">
         <strong>{site.founder.name}</strong><p class="hint">
           I read every request. If it's a fit, we'll agree the scope, timing and
           fee before starting any work.

@@ -1,6 +1,10 @@
 import type { APIRoute } from 'astro';
 import { leadSchema } from '@/lib/lead-schema';
-import { leadProvider, ProviderUnavailable } from '@/lib/server/lead-provider';
+import {
+  leadProvider,
+  ProviderUnavailable,
+  SenderDomainUnverified,
+} from '@/lib/server/lead-provider';
 import { allowRequest } from '@/lib/server/rate-limit';
 export const prerender = false;
 const reply = (
@@ -66,6 +70,17 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       'Request received. We’ll review the fit and contact you by email.',
     );
   } catch (error) {
+    if (error instanceof SenderDomainUnverified) {
+      console.error(
+        '[leads] Resend sender domain is not verified. Check RESEND_FROM and the Resend Domains dashboard.',
+      );
+      return reply(
+        503,
+        import.meta.env.DEV
+          ? 'The sender domain is not verified in Resend. Verify the domain used in RESEND_FROM, then try again. Your details have not been sent.'
+          : 'Email delivery is temporarily unavailable. Your details have not been sent. Please try again later.',
+      );
+    }
     if (error instanceof ProviderUnavailable)
       return reply(
         503,
