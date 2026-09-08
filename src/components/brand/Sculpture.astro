@@ -1,0 +1,42 @@
+<div class="sculpture" id="sculpture">
+  <div class="sculpture-stage" id="sculpture-stage" aria-hidden="true">
+    <div class="sculpture-fallback">
+      <div class="physical-object">
+        {[0, 1, 2, 3, 4, 5].map((i) => <i style={`--layer:${i}`} />)}
+      </div><div class="object-shadow"></div>
+    </div>
+  </div><span class="object-index mono"
+    >Object 001<br />A work in becoming.</span
+  ><span class="object-note mono">Separate parts.<br />One real product.</span
+  ><div class="sculpture-control">
+    <button
+      type="button"
+      id="assemble"
+      aria-pressed="false"
+      aria-label="Bring the sculpture together"
+      ><span class="control-dot" aria-hidden="true"></span><span
+        data-assembly-label>Bring it together</span
+      ><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"
+        ><path
+          d="M3 8h6V2M21 16h-6v6M9 8 2 1m13 15 7 7"
+          stroke="currentColor"
+          fill="none"
+          stroke-width="1.5"></path></svg
+      ></button
+    ><button
+      class="pause-motion"
+      id="pause-scene"
+      type="button"
+      aria-pressed="false"
+      aria-label="Pause 3D motion"
+      hidden>Pause motion</button
+    >
+  </div><span class="sr-only" id="assembly-status" aria-live="polite"
+    >Prototype: separate parts.</span
+  >
+</div>
+<script>
+  import { initSculpture } from '@/lib/sculpture';
+  const host = document.querySelector<HTMLElement>('#sculpture');
+  if (host) initSculpture(host);
+</script>

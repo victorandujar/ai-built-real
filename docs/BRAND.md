@@ -4,9 +4,11 @@
 
 Voice: clear, respectful, optimistic. Celebrate the builder. Explain the next reality in ordinary language. Human judgement is the service; AI is part of the working process.
 
-Visual direction: restrained accent, editorial sans, density 3/10, motion 2/10, asymmetry 6/10. Warm mineral paper, deep green ink and acid-lime verification marks. Manrope Variable for interface and display; IBM Plex Mono for labels that identify stages and evidence. Flat borders and a four-pixel interface radius; the hero's curved prototype outlines are the deliberate exception. Motion is limited to small press/hover feedback. No scroll-jacking.
+Visual direction: a restrained terracotta accent on warm paper, charcoal ink, editorial typography. Density 3/10, motion 5/10, asymmetry 7/10. Archivo Variable gives the voice its directness; Instrument Serif italic brings an individual, human inflection; IBM Plex Mono labels process and evidence. Large, close-set headlines and open editorial sections replace generic feature-card layouts. Pill buttons pair a clear action with a circular arrow, with visible hover, keyboard focus, pressed and disabled states.
 
-The hero shows open geometry becoming a solid marked object. It is CSS geometry, not an abstract stock illustration. The report is labelled as illustrative and contains no claimed client findings. Tool names describe compatible starting points, not endorsements or customer logos.
+The hero is a bespoke Three.js sculpture of six architectural frames. Separate parts assemble into one coherent object: a physical expression of the product-readiness offer. It responds to pointer movement and an explicit assembly control. A pause control, automatic pause after 18 seconds, visibility suspension, reduced-motion support and a CSS fallback keep the experience considerate. Anime.js handles staggered type, scroll reveals, disclosures and form transitions. There is no scroll-jacking. Native page transitions progressively enhance supporting browsers.
+
+The report is explicitly illustrative. Tool names identify starting points, not endorsements. Brand assets repeat the doorway silhouette and terracotta color.
 
 Tokens live in `src/styles/global.css`: colors, spacing, containers, radii, shadow, font scale, easing and duration. Responsive breakpoints are 640, 900 and 1600px; CSS custom properties cannot be directly used as native media-query thresholds, so breakpoints remain explicitly declared.
 

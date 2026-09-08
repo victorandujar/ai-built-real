@@ -6,13 +6,17 @@ import Button from '@/components/ui/Button.astro';
 <header class="wrap">
   <nav class="nav" aria-label="Main navigation">
     <a class="brand" href="/" aria-label="AI-built to Real product home"
-      ><span class="brand-mark" aria-hidden="true">↳</span><span
-        >AI-built<span>Real product.</span></span
-      ></a
+      ><svg width="27" height="30" viewBox="0 0 27 30" aria-hidden="true"
+        ><path d="M0 30V0h27v30h-8V8H8v22Z" fill="currentColor"></path></svg
+      ><span>real<br />product<span class="brand-period">.</span></span></a
+    ><span class="nav-caption mono"
+      >Independent product readiness<br />For the ones who built it.</span
     ><button
       class="menu-button"
       aria-expanded="false"
-      aria-controls="navigation">Menu</button
+      aria-controls="navigation"
+      ><span>Menu</span><span class="menu-glyph" aria-hidden="true">+</span
+      ></button
     ><div class="nav-links" id="navigation">
       {
         site.navigation.map((item) => (
@@ -23,16 +27,27 @@ import Button from '@/components/ui/Button.astro';
             {item.label}
           </a>
         ))
-      }<Button />
+      }<Button label="Let's look at it" />
     </div>
   </nav>
 </header>
 <script>
   const button = document.querySelector<HTMLButtonElement>('.menu-button');
-  button?.addEventListener('click', () => {
-    const open = button.getAttribute('aria-expanded') !== 'true';
-    button.setAttribute('aria-expanded', String(open));
-    document.querySelector<HTMLElement>('#navigation')!.dataset.open =
-      String(open);
+  const menu = document.querySelector<HTMLElement>('#navigation');
+  function setOpen(open: boolean) {
+    button?.setAttribute('aria-expanded', String(open));
+    if (menu) menu.dataset.open = String(open);
+  }
+  button?.addEventListener('click', () =>
+    setOpen(button.getAttribute('aria-expanded') !== 'true'),
+  );
+  document.addEventListener('keydown', (e) => {
+    if (
+      e.key === 'Escape' &&
+      button?.getAttribute('aria-expanded') === 'true'
+    ) {
+      setOpen(false);
+      button.focus();
+    }
   });
 </script>

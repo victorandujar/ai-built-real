@@ -1,34 +1,32 @@
 ---
 import Base from '@/layouts/Base.astro';
 import CheckForm from '@/components/forms/CheckForm.astro';
-import ScanPreview from '@/components/reality/ScanPreview.astro';
 import { site } from '@/config/site';
 ---
 
 <Base
   title="Start your Reality Check"
-  description="Show us your AI-built product and what you plan to do next. Start a conversation about a focused human product readiness review."
+  description="Show us your AI-built product and what comes next. Request a focused human review before launch."
   noindex
-  ><section class="wrap page-hero">
-    <p class="eyebrow">Reality Check / Start here</p><h1>
-      Show us what<br />you've built.
-    </h1>
-  </section><section class="wrap form-layout">
-    <div>
-      <p class="lead">
-        A few questions about your product and what's coming next.
-      </p><p class="muted">
-        No pitch deck. No technical vocabulary required. Just enough context to
-        make the next conversation useful.
-      </p><div class="founder-line">
-        <strong>What happens after this?</strong><p class="hint">
-          Víctor reviews the fit and replies by email. You agree the scope,
-          timing and fee before any paid work begins.
+  ><section class="wrap check-intro">
+    <aside class="check-sidebar">
+      <p class="eyebrow"><span class="live-dot"></span> The Reality Check</p><h1
+      >
+        You built it.<br />Let's <em>look at it.</em>
+      </h1><p class="lead muted">
+        Tell us a little about your product.<br />We'll take it from there,
+        together.
+      </p><div class="check-facts">
+        <span>About 3 minutes</span><span>No payment required</span>
+      </div><div class="founder-line">
+        <strong>{site.founder.name}</strong><p class="hint">
+          I read every request. If it's a fit, we'll agree the scope, timing and
+          fee before starting any work.
         </p>
       </div><p class="hint mt-8">
-        Please don't include passwords, API keys or personal data belonging to
-        your customers.
-      </p>{site.features.publicScan && <ScanPreview />}
-    </div><CheckForm />
+        A product link is enough to start.<br />Keep passwords, keys and
+        customer data private.
+      </p>
+    </aside><CheckForm />
   </section></Base
 >

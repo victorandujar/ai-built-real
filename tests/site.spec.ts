@@ -118,7 +118,7 @@ test('form validation, backwards navigation and unavailable delivery retain data
     'Account boundaries and checkout recovery.',
   );
   await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: 'Check my product' }).click();
+  await page.getByRole('button', { name: 'Send my request' }).click();
   await expect(page.locator('#form-error')).toContainText(
     /not open|could not confirm/,
   );
@@ -138,7 +138,7 @@ test('success UI only follows confirmed server response (mock transport)', async
     }),
   );
   await fill(page);
-  await page.getByRole('button', { name: 'Check my product' }).click();
+  await page.getByRole('button', { name: 'Send my request' }).click();
   await expect(page.locator('#form-success')).toBeVisible();
   await expect(page.locator('#check-form')).toBeHidden();
 });

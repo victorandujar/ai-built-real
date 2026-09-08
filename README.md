@@ -101,7 +101,7 @@ draft: true
 
 Write original content with concrete checks, expected results, limits and primary references for technical claims. Preview it, set `draft: false`, and run QA. Add `updated` only when a material revision occurs. Article schema, listing, RSS and sitemap update during build. Do not publish future-dated or unreviewed copy.
 
-Use Astro's `Image` component for future editorial raster imagery; require useful alt text, dimensions and appropriate loading. V1's decorative hero is CSS, not an image download. `public/og.png` is the actual 1200×630 social preview. `npm run assets` regenerates it and the icon set. Font license notices are shipped under `public/fonts`; Manrope and IBM Plex Mono are self-hosted, with swap and Latin subsets.
+Use Astro's `Image` component for future editorial raster imagery; require useful alt text, dimensions and appropriate loading. The hero is a lazy-loaded Three.js sculpture, with a CSS fallback when WebGL or motion is unavailable. `public/og.png` is the actual 1200×630 social preview. `npm run assets` regenerates it and the icon set. Font license notices are shipped under `public/fonts`; Archivo Variable, Instrument Serif italic and IBM Plex Mono are self-hosted, with swap and Latin subsets.
 
 ## Analytics
 
@@ -113,9 +113,9 @@ Abandonment uses `pagehide` and is best effort. A future provider may require be
 
 ## Verification
 
-See `docs/QA.md` for executed checks and explicit limitations. `npm test` is the full Playwright suite; it expects a running local server. Configure `TEST_BASE_URL` and `PLAYWRIGHT_CHROME_PATH` for other machines. By default Playwright uses its installed Chromium; install it using `npx playwright install chromium` if needed. Tests intercept the success response only in the explicitly named mock-transport test. No mock result is exposed in the product.
+See `docs/QA.md` for executed checks and explicit limitations. `npm test` is the full Playwright suite; it expects a running local server. Configure `TEST_BASE_URL` and `PLAYWRIGHT_CHROME_PATH` for other machines. By default Playwright uses its installed Chromium; install it using `npx playwright install chromium` if needed. Tests intercept the success response only in the explicitly named mock-transport test. See docs/RESEND.md for activation. No mock result is exposed in the product.
 
-Performance budgets: public-page initial JS under 10KB gzip, form scripts under 35KB gzip, public-page font payload under 60KB, no hero media, no CLS from intentionally unsized media. Target production Lighthouse 95–100 performance and 100 accessibility/best-practices/SEO; measure the deployed build rather than claiming unmeasured scores. Local noindex intentionally affects SEO audit scoring.
+Performance targets: keep the shared interaction entry small; load the 3D engine only when the hero enters view. The reserved canvas area prevents layout shifts. Three.js is a deliberate additional payload for the immersive experience. See measured bundle sizes in docs/QA.md. Target production Lighthouse 95–100 performance and 100 accessibility/best-practices/SEO; measure the deployed build rather than claiming unmeasured scores. Local noindex intentionally affects SEO audit scoring.
 
 ## Deliberately postponed
 

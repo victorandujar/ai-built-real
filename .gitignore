@@ -5,5 +5,5 @@ dist/
 .env
 .env.*
 !.env.example
-work/
+/work/
 .DS_Store

@@ -1,5 +1,6 @@
 ---
 import { site } from '@/config/site';
+import Arrow from './Arrow.astro';
 interface Props {
   href?: string;
   label?: string;
@@ -10,5 +11,5 @@ const { href = '/check', label = site.cta, light = false, event } = Astro.props;
 ---
 
 <a href={href} class:list={['button', { light }]} data-event={event}
-  >{label}<span aria-hidden="true" class="arrow">↗</span></a
+  ><span>{label}</span><span class="button-icon"><Arrow /></span></a
 >
