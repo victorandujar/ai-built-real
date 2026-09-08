@@ -18,7 +18,8 @@ const posts = (await getCollection('learn'))
     <div class="opening-margin">
       <span class="mono">A NOTE TO THE BUILDER</span><span
         class="opening-arrow"
-        aria-hidden="true">↳</span>
+        aria-hidden="true">↳</span
+      >
     </div>
     <div class="opening-main">
       <h2 id="opening-title">
@@ -28,7 +29,8 @@ const posts = (await getCollection('learn'))
             viewBox="0 0 600 35"
             preserveAspectRatio="none"
             ><path d="M4 22Q290 1 594 12M120 31Q360 12 530 22"></path></svg
-          ></span>
+          ></span
+        >
       </h2><div class="opening-bottom">
         <p class="editorial-aside">That's a<br /><em>big deal.</em></p><p>
           AI changed who gets to build. We think that's extraordinary. You made
@@ -44,12 +46,12 @@ const posts = (await getCollection('learn'))
     <div class="wrap">
       <div class="chapter-line">
         <span class="mono">03 / What you leave with</span><span class="mono"
-          >Less noise. A next move.</span>
+          >Less noise. A next move.</span
+        >
       </div>
       <div class="report-spread">
         <div class="report-copy">
-          <span class="report-pencil" aria-hidden="true">The useful part.</span
-          ><h2 id="report-heading">Clarity,<br /><em>in your hands.</em></h2><p>
+          <h2 id="report-heading">Clarity,<br /><em>in your hands.</em></h2><p>
             A short, prioritised report. What blocks your next release, what to
             fix soon, and what is already good enough.
           </p><p>
@@ -58,12 +60,19 @@ const posts = (await getCollection('learn'))
           </p><a href="/check" class="text-link">Get a clear next move ↗</a>
         </div><div class="report-desk">
           <span class="desk-annotation mono"
-            >SPECIMEN 01 / AN ILLUSTRATIVE REPORT</span
-          ><Report /><div class="desk-note">
-            <span class="mono">THE STANDARD</span><p>
-              Enough detail to act.<br />Enough restraint to focus.
-            </p><svg aria-hidden="true" viewBox="0 0 80 40"
-              ><path d="M5 5Q55 5 60 30m-10-7 10 9 8-12"></path></svg>
+            >AN EXAMPLE / EXPLORE THE PRIORITIES</span
+          ><div class="report-explorer" data-report-explorer>
+            <div class="report-filters" aria-label="Explore example priorities">
+              <button type="button" data-filter="all" aria-pressed="true"
+                >The whole picture</button
+              ><button type="button" data-filter="blockers" aria-pressed="false"
+                >Launch blockers</button
+              >
+            </div>
+            <Report />
+            <p class="report-explore-hint">
+              Open a finding to see the thinking behind it.
+            </p>
           </div>
         </div>
       </div>
@@ -83,16 +92,19 @@ const posts = (await getCollection('learn'))
         follow the evidence and stand behind the recommendation.
       </p><div class="human-signoff">
         <span class="signature">Víctor Andújar</span><span class="mono"
-          >THE HUMAN BEHIND REAL PRODUCT</span>
+          >THE HUMAN BEHIND REAL PRODUCT</span
+        >
       </div><a href="/about" class="text-link"
-        >Meet the person behind the check ↗</a>
+        >Meet the person behind the check ↗</a
+      >
     </div>
   </section>
   <section class="path-chapter">
     <div class="wrap">
       <div class="chapter-line">
         <span class="mono">04 / From here, forward</span><span class="mono"
-          >Still your product. Always.</span>
+          >Still your product. Always.</span
+        >
       </div><div class="path-heading">
         <h2>One check.<br /><em>A way forward.</em></h2><p>
           First product? First users? First paying customers?<br />This is the
@@ -120,7 +132,8 @@ const posts = (await getCollection('learn'))
             </p><a
               href="/check?interest=sprint"
               class="text-link"
-              data-event="reality_sprint_clicked">Explore a sprint ↗</a>
+              data-event="reality_sprint_clicked">Explore a sprint ↗</a
+            >
           </div>
         </li><li>
           <span class="path-number" aria-hidden="true">↗</span><div
@@ -149,17 +162,12 @@ const posts = (await getCollection('learn'))
         posts.map((p, i) => (
           <a class={`journal-volume volume-${i}`} href={`/learn/${p.id}`}>
             <>
-              <div class="volume-cover">
+              <div class={`insight-orbit orbit-${i}`} aria-hidden="true">
                 <>
-                  <span class="volume-top mono">
-                    REAL PRODUCT / FIELD NOTES
-                  </span>
-                  <span class="volume-art" aria-hidden="true">
-                    {i === 0 ? '?' : i === 1 ? '↗' : '+'}
-                  </span>
-                  <span class="volume-index mono">
-                    VOL. 0{i + 1} <span>READ BEFORE YOU SHIP</span>
-                  </span>
+                  <i />
+                  <i />
+                  <i />
+                  <span>0{i + 1}</span>
                 </>
               </div>
               <div class="volume-caption">

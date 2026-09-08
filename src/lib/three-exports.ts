@@ -10,5 +10,7 @@ export {
   PerspectiveCamera,
   PlaneGeometry,
   Scene,
+  SphereGeometry,
+  TorusGeometry,
   WebGLRenderer,
 } from 'three';

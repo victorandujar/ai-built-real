@@ -81,6 +81,17 @@ const scenes = [
         }
       </div>
       <div class="scene-panels">
+        <div
+          class="reality-sculpture"
+          data-reality-sculpture
+          aria-hidden="true"
+        >
+          <div class="orbit-fallback"><i></i><i></i><i></i><b></b></div>
+          <span class="sculpture-coordinate mono"
+            >REAL WORLD / LIVE CONNECTIONS</span
+          >
+          <span class="sculpture-index mono">01—04</span>
+        </div>
         {
           scenes.map((s, i) => (
             <article
@@ -90,35 +101,22 @@ const scenes = [
               tabindex="0"
               hidden={i !== 0}
             >
-              <div
-                class={`scene-specimen specimen-${s.kind}`}
-                aria-hidden="true"
-              >
-                <>
-                  <span class="specimen-label mono">{s.label}</span>
-                  <div class="specimen-objects">
-                    <>
-                      <div class="specimen-piece piece-a">
-                        <>
-                          <i />
-                          <i />
-                          <span>{s.from}</span>
-                        </>
-                      </div>
-                      <div class="specimen-bridge">
-                        <span>→</span>
-                      </div>
-                      <div class="specimen-piece piece-b">
-                        <>
-                          <i />
-                          <i />
-                          <span>{s.to}</span>
-                        </>
-                      </div>
-                    </>
-                  </div>
-                  <span class="specimen-foot mono">ILLUSTRATIVE SCENARIO</span>
-                </>
+              <div class="scene-depth-control">
+                <label for={`scene-depth-${i}`}>
+                  Shift perspective <span aria-hidden="true">↔</span>
+                </label>
+                <input
+                  id={`scene-depth-${i}`}
+                  class="scene-depth"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="0"
+                  aria-valuetext="Front perspective"
+                />
+                <button type="button" class="scene-replay">
+                  Replay the scene <span aria-hidden="true">↺</span>
+                </button>
               </div>
               <div class="scene-caption">
                 <>

@@ -1,22 +1,118 @@
-<div class="request-object" data-request-object data-stage="0">
-  <div class="brief-space" aria-hidden="true">
-    <div class="brief-stack">
-      <div class="brief-sheet sheet-contact">
-        <span>03 / THE HUMAN</span><i></i><i></i><b>Let's talk.</b>
-      </div>
-      <div class="brief-sheet sheet-context">
-        <span>02 / THE NEXT MOVE</span><i></i><i></i><b>A little context.</b>
-      </div>
-      <div class="brief-sheet sheet-product">
-        <span>01 / THE PRODUCT</span><div class="brief-symbol">↗</div><b
-          >Your next chapter.</b
-        ><small>REAL PRODUCT / REALITY CHECK</small>
-      </div>
-    </div>
+<div class="request-object request-orbital" data-request-object data-stage="0">
+  <div class="request-orbits" aria-hidden="true">
+    <i></i><i></i><i></i><div class="request-core">↗</div>
+    <span class="request-node node-product">PRODUCT</span>
+    <span class="request-node node-context">CONTEXT</span>
+    <span class="request-node node-human">YOU</span>
   </div>
   <div class="brief-caption">
-    <span class="mono">Your brief, coming together.</span><span
-      data-brief-caption>01 — Start with what you built.</span
-    >
+    <span class="mono">A clearer picture, one step at a time.</span>
+    <span data-brief-caption>01 — Start with what you built.</span>
   </div>
 </div>
+<style>
+  .request-orbital {
+    display: block;
+  }
+  .request-orbital .brief-caption {
+    position: relative;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+  }
+  .request-orbits {
+    position: relative;
+    width: min(100%, 400px);
+    height: 340px;
+    margin: auto;
+    perspective: 800px;
+  }
+  .request-orbits i {
+    position: absolute;
+    inset: 25px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    transform: rotateY(55deg) rotateZ(-25deg);
+    transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .request-orbits i:nth-child(2) {
+    transform: rotateY(-55deg) rotateZ(25deg);
+    border-width: 8px;
+  }
+  .request-orbits i:nth-child(3) {
+    transform: rotateX(70deg);
+  }
+  .request-core {
+    position: absolute;
+    inset: 34%;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 30% 20%,
+      #ed9c73,
+      #c4472d 60%,
+      #7f3021
+    );
+    color: #fff2df;
+    font-size: 3rem;
+    box-shadow: 12px 20px 30px #6d382522;
+  }
+  .request-node {
+    position: absolute;
+    font: 0.5rem var(--font-mono);
+    padding: 0.4rem 0.7rem;
+    background: var(--paper);
+    border-radius: 30px;
+    border: 1px solid var(--line);
+  }
+  .node-product {
+    left: 2%;
+    top: 25%;
+  }
+  .node-context {
+    right: 0;
+    top: 45%;
+  }
+  .node-human {
+    bottom: 12%;
+    left: 20%;
+  }
+  [data-stage='1'] .request-orbits i {
+    transform: rotateY(10deg) rotateZ(55deg);
+  }
+  [data-stage='1'] .request-orbits i:nth-child(2) {
+    transform: rotateY(75deg) rotateZ(-40deg);
+  }
+  [data-stage='2'] .request-orbits i {
+    transform: rotateX(45deg) rotateY(35deg);
+  }
+  [data-stage='2'] .request-orbits i:nth-child(2) {
+    transform: rotateX(-45deg) rotateY(-35deg);
+  }
+  [data-stage='sent'] .request-orbits i {
+    transform: rotateY(0);
+  }
+  [data-stage='0'] .node-product,
+  [data-stage='1'] .node-context,
+  [data-stage='2'] .node-human {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  @media (max-width: 640px) {
+    .request-orbits {
+      height: 190px;
+      width: 230px;
+    }
+    .request-core {
+      font-size: 1.7rem;
+    }
+    .request-node {
+      font-size: 0.4rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .request-orbits i {
+      transition: none;
+    }
+  }
+</style>

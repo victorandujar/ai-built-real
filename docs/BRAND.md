@@ -28,3 +28,20 @@ Keep the chosen descriptive brand for V1. No domain availability or trademark cl
 1. Validate the offer with five founders who have a working product and a launch date. Listen for which uncertainty would make them pay for a review.
 2. Sell a small initial cohort of scoped Reality Checks, with a written deliverable and explicit timeline. Quote an optional sprint only after findings exist.
 3. With explicit client permission, turn a completed check and sprint into an evidence-based case study. Use the result to write the first genuinely tool-specific landing page.
+
+## Editorial homepage refinement
+
+The hero and shared identity remain intact. The home now uses an editorial sequence: a typographic note to the builder, four selectable real-world scenarios, seven review lenses, an illustrative report on a paper desk, a human response, a staggered release path and three dimensional field-note volumes. Each composition supports a different reading task. The scenarios are illustrations, never product scan results. The library covers are decorative; article names remain visible outside the artwork.
+
+The home-specific styles live in src/styles/editorial.css. RealityScenes.astro provides keyboard-operated tabs (arrows, Home and End); ReviewBench.astro uses native exclusive disclosures. editorial.ts adds selective entrance motion and scene transitions, reusing Anime.js. CSS perspective adds depth without another renderer, model download or dependency. Reduced-motion users retain readable states with new entrance motion disabled. Mobile converts the release path to a vertical sequence and the library to compact reading rows.
+
+## Spatial edition — September 8
+
+The home now moves away from physical stationery. Keep the established hero,
+terracotta accent and editorial typography. Replace report-sheet tilt, book covers
+and the form's dossier with open compositions and orbital forms. Reality scenarios
+use one lazy Three.js sculpture: relationships, separate accounts, payment handoffs
+and operational signals become different arrangements of the same geometry.
+Controls trigger a finite transition rather than an endless decorative loop.
+Field notes become full-width editorial links with responsive orbital linework.
+The report remains clearly illustrative, with expandable reasoning and priorities.

@@ -1,4 +1,6 @@
 import { animate } from 'animejs';
+import { mountRealitySculpture } from './reality-sculpture';
+mountRealitySculpture();
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 for (const host of document.querySelectorAll<HTMLElement>('[data-scenes]')) {
   const tabs = Array.from(
@@ -13,7 +15,10 @@ for (const host of document.querySelectorAll<HTMLElement>('[data-scenes]')) {
       tab.tabIndex = i === index ? 0 : -1;
       panels[i].hidden = i !== index;
     });
+    host.dispatchEvent(new CustomEvent('reality:scene', { detail: index }));
     if (focus) tabs[index].focus();
+    if (!reduced.matches)
+      panels[index].querySelector<HTMLButtonElement>('.scene-replay')?.click();
     if (!reduced.matches)
       animate(panels[index], {
         opacity: [0.3, 1],
@@ -52,4 +57,145 @@ if (!reduced.matches) {
   document
     .querySelectorAll('.opening-built,.release-path li,.journal-volume')
     .forEach((el) => observer.observe(el));
+}
+
+// A controlled exploded view makes the relationship between parts tangible.
+for (const panel of document.querySelectorAll<HTMLElement>(
+  '.scene-panels article',
+)) {
+  const scene = panel.closest<HTMLElement>('[data-scenes]')!;
+  const slider = panel.querySelector<HTMLInputElement>('.scene-depth')!;
+  const replay = panel.querySelector<HTMLButtonElement>('.scene-replay')!;
+  let animation: ReturnType<typeof animate> | undefined;
+  function spread(value: number) {
+    slider.value = String(value);
+    slider.setAttribute(
+      'aria-valuetext',
+      value === 0
+        ? 'Front perspective'
+        : value === 100
+          ? 'Side perspective'
+          : `Perspective ${value}%`,
+    );
+    scene.dispatchEvent(
+      new CustomEvent('reality:perspective', { detail: value }),
+    );
+  }
+  slider.addEventListener('input', () => {
+    animation?.cancel();
+    spread(Number(slider.value));
+  });
+  replay.addEventListener('click', () => {
+    animation?.cancel();
+    if (reduced.matches) {
+      spread(Number(slider.value) === 0 ? 100 : 0);
+      return;
+    }
+    const state = { value: 0 };
+    animation = animate(state, {
+      value: [0, 100, 0],
+      duration: 1400,
+      ease: 'inOutCubic',
+      onUpdate: () => spread(Math.round(state.value)),
+    });
+  });
+  reduced.addEventListener('change', () => {
+    if (reduced.matches) animation?.cancel();
+  });
+}
+
+// Findings remain explicitly illustrative; interaction explains priorities, not scan results.
+const examples = [
+  [
+    'Why it matters',
+    'A private project should stay private even when someone guesses its address.',
+    'Next action',
+    'Enforce ownership on the server, then repeat the same request from a second account.',
+  ],
+  [
+    'Why it matters',
+    'A successful payment is not enough if the customer never receives access.',
+    'Next action',
+    'Make payment handling safe to repeat and provide a recovery path when the handoff fails.',
+  ],
+  [
+    'Why it matters',
+    'An error that nobody sees can keep affecting people long after the first failure.',
+    'Next action',
+    'Capture the important failure and give the person operating the product enough context to respond.',
+  ],
+  [
+    'Why it matters',
+    'The essential journey already helps a new user reach a useful result.',
+    'Next action',
+    'Keep it. Focus the next release on the blockers rather than rebuilding a working flow.',
+  ],
+];
+for (const host of document.querySelectorAll<HTMLElement>(
+  '[data-report-explorer]',
+)) {
+  const rows = Array.from(host.querySelectorAll<HTMLElement>('.report-row'));
+  rows.forEach((row, i) => {
+    const contents = Array.from(row.childNodes);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'finding-toggle';
+    button.append(...contents);
+    button.setAttribute('aria-expanded', 'false');
+    const icon = document.createElement('span');
+    icon.className = 'finding-plus';
+    icon.textContent = '+';
+    icon.setAttribute('aria-hidden', 'true');
+    button.append(icon);
+    const detail = document.createElement('div');
+    detail.className = 'finding-detail';
+    detail.id = `finding-detail-${i}`;
+    detail.hidden = true;
+    button.setAttribute('aria-controls', detail.id);
+    for (let j = 0; j < 4; j += 2) {
+      const label = document.createElement('strong');
+      label.textContent = examples[i][j];
+      const copy = document.createElement('p');
+      copy.textContent = examples[i][j + 1];
+      detail.append(label, copy);
+    }
+    row.append(button, detail);
+    button.addEventListener('click', () => {
+      const open = detail.hidden;
+      rows.forEach((other) => {
+        other.querySelector('button')?.setAttribute('aria-expanded', 'false');
+        const body = other.querySelector<HTMLElement>('.finding-detail');
+        if (body) body.hidden = true;
+      });
+      detail.hidden = !open;
+      button.setAttribute('aria-expanded', String(open));
+      if (open && !reduced.matches)
+        animate(detail, {
+          opacity: [0.2, 1],
+          translateY: [-6, 0],
+          duration: 300,
+          ease: 'outCubic',
+        });
+    });
+  });
+  host.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((button) =>
+    button.addEventListener('click', () => {
+      host
+        .querySelectorAll('[data-filter]')
+        .forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+      rows.forEach((row, i) => {
+        row.hidden = button.dataset.filter === 'blockers' && i > 1;
+      });
+      if (!reduced.matches)
+        animate(
+          rows.filter((r) => !r.hidden),
+          {
+            opacity: [0.35, 1],
+            translateX: [8, 0],
+            duration: 300,
+            ease: 'outCubic',
+          },
+        );
+    }),
+  );
 }
