@@ -1,6 +1,19 @@
 <div class="request-object request-orbital" data-request-object data-stage="0">
   <div class="request-orbits" aria-hidden="true">
-    <i></i><i></i><i></i><div class="request-core">↗</div>
+    <i></i><i></i><i></i><div class="request-core">
+      <span class="compass-dial"></span><svg
+        class="compass-needle"
+        viewBox="0 0 100 100"
+        fill="none"
+        ><path d="M50 12 63 50 50 88 37 50Z" fill="#802e22"></path><path
+          d="M50 12 63 50 50 44 37 50Z"
+          fill="#fff0d5"></path><path d="M50 12 50 44 37 50Z" fill="#dfbb95"
+        ></path><circle cx="50" cy="50" r="5" fill="#e8c7a1"></circle><circle
+          cx="50"
+          cy="50"
+          r="2"
+          fill="#8b3928"></circle></svg>
+    </div>
     <span class="request-node node-product">PRODUCT</span>
     <span class="request-node node-context">CONTEXT</span>
     <span class="request-node node-human">YOU</span>
@@ -9,7 +22,12 @@
     <span class="mono">A clearer picture, one step at a time.</span>
     <span data-brief-caption>01 — Start with what you built.</span>
   </div>
+  <button class="compass-motion" type="button" aria-pressed="false" hidden
+    ><span aria-hidden="true">Ⅱ</span>
+    <span data-motion-label>Pause motion</span></button
+  >
 </div>
+<script src="@/lib/request-compass.ts"></script>
 <style>
   .request-orbital {
     display: block;
@@ -22,7 +40,7 @@
   .request-orbits {
     position: relative;
     width: min(100%, 400px);
-    height: 340px;
+    aspect-ratio: 1;
     margin: auto;
     perspective: 800px;
   }
@@ -32,11 +50,10 @@
     border: 1px solid var(--accent);
     border-radius: 50%;
     transform: rotateY(55deg) rotateZ(-25deg);
-    transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
   }
   .request-orbits i:nth-child(2) {
     transform: rotateY(-55deg) rotateZ(25deg);
-    border-width: 8px;
+    border-width: 5px;
   }
   .request-orbits i:nth-child(3) {
     transform: rotateX(70deg);
@@ -77,21 +94,6 @@
     bottom: 12%;
     left: 20%;
   }
-  [data-stage='1'] .request-orbits i {
-    transform: rotateY(10deg) rotateZ(55deg);
-  }
-  [data-stage='1'] .request-orbits i:nth-child(2) {
-    transform: rotateY(75deg) rotateZ(-40deg);
-  }
-  [data-stage='2'] .request-orbits i {
-    transform: rotateX(45deg) rotateY(35deg);
-  }
-  [data-stage='2'] .request-orbits i:nth-child(2) {
-    transform: rotateX(-45deg) rotateY(-35deg);
-  }
-  [data-stage='sent'] .request-orbits i {
-    transform: rotateY(0);
-  }
   [data-stage='0'] .node-product,
   [data-stage='1'] .node-context,
   [data-stage='2'] .node-human {
@@ -100,7 +102,6 @@
   }
   @media (max-width: 640px) {
     .request-orbits {
-      height: 190px;
       width: 230px;
     }
     .request-core {
@@ -114,5 +115,92 @@
     .request-orbits i {
       transition: none;
     }
+  }
+  .request-orbits i {
+    box-shadow:
+      inset 1px 1px 0 #f0c4a1,
+      1px 1px 0 #6e34272e;
+  }
+  .request-orbits i::after {
+    content: '';
+    position: absolute;
+    top: 13%;
+    left: 13%;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #efd6b7;
+    border: 1px solid #ac553b;
+  }
+  .request-orbits::before {
+    content: '';
+    position: absolute;
+    inset: 11%;
+    border: 1px dashed #c4472d25;
+    border-radius: 50%;
+  }
+  .request-core {
+    inset: 32%;
+    box-shadow:
+      inset 1px 2px 2px #ffd5af9c,
+      inset -2px -3px 3px #66271e80,
+      8px 14px 24px #6d382526;
+  }
+  .compass-dial {
+    position: absolute;
+    inset: 9%;
+    border: 1px solid #efb18b73;
+    border-radius: 50%;
+  }
+  .compass-dial::before,
+  .compass-dial::after {
+    content: '';
+    position: absolute;
+    background: #efb18b50;
+  }
+  .compass-dial::before {
+    width: 1px;
+    height: 100%;
+    left: 50%;
+  }
+  .compass-dial::after {
+    height: 1px;
+    width: 100%;
+    top: 50%;
+  }
+  .compass-needle {
+    position: absolute;
+    inset: 9%;
+    width: 82%;
+    height: 82%;
+    transform: rotate(-55deg);
+    filter: drop-shadow(1px 3px 2px #62271950);
+  }
+  .request-node {
+    z-index: 2;
+  }
+  .compass-motion {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.5rem 0;
+    margin-top: 0.3rem;
+    background: none;
+    border: 0;
+    color: var(--muted);
+    font: 0.55rem var(--font-mono);
+    cursor: pointer;
+  }
+  .compass-motion[hidden] {
+    display: none;
+  }
+  .compass-motion:hover {
+    color: var(--accent);
+  }
+  .compass-motion:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 2px;
   }
 </style>

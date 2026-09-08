@@ -1,37 +1,392 @@
 ---
 import Base from '@/layouts/Base.astro';
+
+const updated = '8 September 2026';
 ---
 
-<Base title="Terms of service" noindex
-  ><section class="wrap page-hero">
-    <p class="eyebrow">Real product / Legal</p><h1>Terms of service</h1>
-  </section><section class="wrap section">
+<Base
+  title="Terms & conditions"
+  description="Terms and conditions governing the use of the Real product website and the professional services offered through it."
+  noindex
+>
+  <section class="wrap page-hero">
+    <p class="eyebrow">Real product / Legal</p>
+    <h1>Terms &amp; conditions</h1>
+    <p class="lead">Last updated: {updated}</p>
+  </section>
+  <section class="wrap section">
     <div class="prose legal">
-      <p class="notice">
-        Draft for launch review. This page requires the operator's legal details
-        and review for the chosen jurisdiction before paid services are offered.
-      </p><h2>What the website offers</h2><p>
-        Real product offers human product and engineering reviews of AI-built
-        products. Sending a form requests a conversation. It is not a purchase
-        or an agreement to begin paid work.
-      </p><h2>Scope and payment</h2><p>
-        The scope, deliverables, timeline and fee must be agreed separately
-        before a Reality Check or Reality Sprint begins. No definitive price is
-        published in this version.
-      </p><h2>Limits of a review</h2><p>
-        A review is based on the agreed scope and the product made available. It
-        is not a penetration test, compliance certification or guarantee that
-        all defects will be found. Findings may include a recommendation to
-        consult a specialist.
-      </p><h2>Access and ownership</h2><p>
-        Share only resources you are authorised to share. Repository access and
-        handling of confidential information are agreed separately. The product
-        remains yours.
-      </p><h2>Details to complete</h2><p>
-        [REQUIRED BEFORE LAUNCH: contracting entity, address, contact, governing
-        law, cancellation and refund terms, consumer rights where applicable,
-        liability provisions and dispute resolution.]
+      <p>
+        These Terms &amp; Conditions govern the use of the Real Product website
+        and the professional services offered through it.
+      </p>
+      <p>
+        By using this website, submitting a Reality Check request, or engaging
+        Real Product for professional services, you acknowledge that you have
+        read and understood these Terms.
+      </p>
+      <h2>1. Service Provider</h2>
+      <p>Real Product is a professional service operated by:</p>
+      <p>
+        <strong>Víctor Andújar Murcia</strong><br />NIF: <strong
+          >53296659R</strong
+        ><br />Avinguda Comte Ramon Berenguer 146, Baixos 2a<br />08690 Santa
+        Coloma de Cervelló, Barcelona, Spain<br />Email: <strong
+          ><a href="mailto:victorandujarmurcia@gmail.com"
+            >victorandujarmurcia@gmail.com</a
+          ></strong>
+      </p>
+      <p>
+        For the purposes of these Terms, &ldquo;Real Product&rdquo;,
+        &ldquo;we&rdquo;, &ldquo;us&rdquo; and &ldquo;our&rdquo; refer to Víctor
+        Andújar Murcia.
+      </p>
+      <h2>2. About Real Product</h2>
+      <p>
+        Real Product provides technical product review, development and
+        improvement services for digital products, with a particular focus on
+        products created or accelerated using AI-assisted development tools.
+      </p>
+      <p>Services may include:</p>
+      <ul>
+        <li>Technical and product reviews.</li><li>
+          Codebase and architecture assessment.
+        </li><li>UX and product-flow review.</li><li>
+          Identification of technical risks and weaknesses.
+        </li><li>Performance and maintainability assessment.</li><li>
+          Recommendations and prioritisation.
+        </li><li>Refactoring and technical clean-up.</li><li>
+          Implementation of agreed improvements.
+        </li><li>Product development and engineering support.</li>
+      </ul>
+      <p>
+        The exact scope, price, deliverables and timeline of paid engagements
+        will be agreed separately between Real Product and the client.
+      </p>
+      <h2>3. Reality Check</h2>
+      <p>
+        The Reality Check is an initial assessment intended to identify relevant
+        technical, product and implementation issues in a digital product.
+      </p>
+      <p>
+        The assessment is based on the product, code, information and access
+        made available at the time of the review.
+      </p>
+      <p>
+        Unless explicitly agreed otherwise, a Reality Check does <strong
+          >not</strong
+        > constitute:
+      </p>
+      <ul>
+        <li>A penetration test or formal cybersecurity audit.</li><li>
+          A legal or regulatory compliance audit.
+        </li><li>A formal accessibility certification.</li><li>
+          A certification of software quality or security.
+        </li><li>
+          A guarantee that every bug, vulnerability or technical issue will be
+          identified.
+        </li><li>
+          A guarantee regarding product-market fit, revenue, growth or
+          commercial success.
+        </li>
+      </ul>
+      <p>
+        The Reality Check represents a professional assessment based on the
+        information reasonably available at the time.
+      </p>
+      <h2>4. Reality Sprint and Paid Services</h2>
+      <p>
+        Following a Reality Check or other initial contact, Real Product may
+        propose a paid engagement, including a Reality Sprint.
+      </p>
+      <p>
+        Before paid work begins, the essential conditions of the engagement will
+        be communicated and agreed in writing. These may include:
+      </p>
+      <ul>
+        <li>Scope of work.</li><li>Deliverables.</li><li>
+          Price and applicable taxes.
+        </li><li>Payment schedule.</li><li>Estimated timeline.</li><li>
+          Client dependencies.
+        </li><li>Required access.</li><li>Any project-specific conditions.</li>
+      </ul>
+      <p>
+        Written project-specific agreements, proposals or quotations will take
+        precedence over these general Terms where they expressly establish
+        different conditions.
+      </p>
+      <h2>5. Project Requests</h2>
+      <p>
+        Submitting a form through this website does not automatically create a
+        contractual relationship or obligation to provide services.
+      </p>
+      <p>Real Product reserves the right to accept or decline any request.</p>
+      <p>
+        A paid engagement begins once its scope and commercial conditions have
+        been agreed by both parties.
+      </p>
+      <h2>6. Client Responsibilities</h2>
+      <p>
+        Clients must provide accurate information and the access reasonably
+        necessary to perform the agreed services.
+      </p>
+      <p>
+        Where access is provided to source-code repositories, hosting providers,
+        databases, analytics platforms, APIs or other systems, the client
+        confirms that they have the necessary authority to grant such access.
+      </p>
+      <p>The client remains responsible for:</p>
+      <ul>
+        <li>Maintaining appropriate backups.</li><li>
+          Protecting production credentials and sensitive information.
+        </li><li>
+          Reviewing significant changes where appropriate before production
+          deployment.
+        </li><li>Ensuring the legality of their product and business.</li><li>
+          Obtaining necessary permissions for third-party code, content, data
+          and services.
+        </li><li>
+          Informing Real Product of relevant technical or operational
+          restrictions.
+        </li>
+      </ul>
+      <h2>7. Repository and System Access</h2>
+      <p>
+        Where access to private repositories or other systems is necessary, Real
+        Product will use such access solely for the purposes of performing the
+        agreed work.
+      </p>
+      <p>
+        Clients should provide the minimum level of access reasonably required.
+      </p>
+      <p>
+        Real Product will not intentionally copy, disclose or use private source
+        code, credentials or proprietary information for unrelated purposes.
+      </p>
+      <p>Clients may revoke access once the engagement has concluded.</p>
+      <h2>8. Confidentiality</h2>
+      <p>
+        Information identified as confidential or which would reasonably be
+        understood to be confidential will be treated accordingly.
+      </p>
+      <p>This includes, where applicable:</p>
+      <ul>
+        <li>Non-public source code.</li><li>Product roadmaps.</li><li>
+          Business information.
+        </li><li>Credentials and infrastructure information.</li><li>
+          Internal documentation.
+        </li><li>Non-public user or customer information.</li>
+      </ul>
+      <p>
+        Confidentiality obligations do not apply to information that is publicly
+        available through no breach of these Terms, was already lawfully known,
+        was independently developed, or must be disclosed by law.
+      </p>
+      <h2>9. Intellectual Property</h2>
+      <p>
+        The client retains ownership of all intellectual property that existed
+        before the engagement, including their product, brand, content, data and
+        existing source code.
+      </p>
+      <p>
+        Unless otherwise agreed in writing, once all applicable invoices have
+        been paid, the client will own the project-specific code and
+        deliverables created specifically for them as part of the engagement.
+      </p>
+      <p>
+        Real Product retains ownership of pre-existing knowledge, methodologies,
+        reusable components, generic utilities, development techniques,
+        processes and know-how that are not uniquely created for the client.
+      </p>
+      <p>
+        Third-party and open-source components remain subject to their
+        respective licences.
+      </p>
+      <h2>10. Portfolio and Public References</h2>
+      <p>
+        Real Product will not publish private source code, confidential
+        information or sensitive technical details belonging to a client.
+      </p>
+      <p>
+        The use of a client's name, logo, product or project as a public case
+        study or portfolio reference will require prior permission where the
+        engagement or product is not already public.
+      </p>
+      <h2>11. Fees and Payment</h2>
+      <p>
+        Prices and payment terms will be communicated before paid work begins.
+      </p>
+      <p>Unless otherwise stated, prices may be subject to applicable taxes.</p>
+      <p>
+        Invoices must be paid within the payment period indicated on the invoice
+        or agreed proposal.
+      </p>
+      <p>Real Product may pause work where an invoice becomes overdue.</p>
+      <p>
+        Additional work outside the agreed scope may require a new estimate or
+        additional approval before implementation.
+      </p>
+      <h2>12. Changes to Scope</h2>
+      <p>Software projects can evolve during implementation.</p>
+      <p>
+        Requests that materially change the agreed scope, deliverables or
+        technical requirements may affect the price and timeline.
+      </p>
+      <p>
+        Real Product will communicate material changes before undertaking
+        additional billable work.
+      </p>
+      <h2>13. Cancellation</h2>
+      <p>
+        Cancellation conditions may be established for individual paid
+        engagements.
+      </p>
+      <p>
+        Where work has already begun, the client will remain responsible for
+        payment for work already performed and any non-recoverable costs
+        incurred up to the effective date of cancellation, unless otherwise
+        agreed.
+      </p>
+      <p>
+        Any mandatory consumer rights applicable under Spanish or European Union
+        law remain unaffected.
+      </p>
+      <h2>14. Consumer Right of Withdrawal</h2>
+      <p>
+        Where the client qualifies as a consumer under applicable law, statutory
+        withdrawal rights may apply to contracts concluded at a distance.
+      </p>
+      <p>
+        Where the client expressly requests that services begin during the
+        statutory withdrawal period, the client may be required to pay the
+        proportional amount corresponding to services already provided if they
+        subsequently exercise their right of withdrawal.
+      </p>
+      <p>
+        Where a service has been fully performed following the consumer's prior
+        express request and acknowledgement, the right of withdrawal may cease
+        where permitted by applicable law.
+      </p>
+      <p>Nothing in these Terms limits mandatory consumer rights.</p>
+      <h2>15. No Guarantee of Results</h2>
+      <p>
+        Software engineering involves technical uncertainty and depends on
+        factors outside Real Product's control.
+      </p>
+      <p>Real Product does not guarantee:</p>
+      <ul>
+        <li>That software will be completely free of defects.</li><li>
+          That every vulnerability will be discovered.
+        </li><li>Uninterrupted operation of third-party services.</li><li>
+          Specific performance improvements unless expressly agreed.
+        </li><li>
+          Commercial results, revenue, user growth or product-market fit.
+        </li><li>
+          Continued compatibility following changes made by third parties after
+          delivery.
+        </li>
+      </ul>
+      <p>
+        Real Product commits to providing the agreed services with reasonable
+        professional care and diligence.
+      </p>
+      <h2>16. Third-Party Services</h2>
+      <p>
+        Projects may depend on third-party services such as hosting providers,
+        APIs, databases, authentication systems, AI providers, payment platforms
+        or open-source libraries.
+      </p>
+      <p>
+        Real Product is not responsible for outages, pricing changes, policy
+        changes, security incidents or modifications caused by third-party
+        providers outside its reasonable control.
+      </p>
+      <h2>17. AI-Assisted Development</h2>
+      <p>
+        Real Product may use professional development tools incorporating
+        artificial intelligence where appropriate.
+      </p>
+      <p>
+        AI-assisted tools are used as part of a human-led development process
+        and do not replace professional review and judgement.
+      </p>
+      <p>
+        Reasonable care will be taken regarding confidential client information.
+        Where a project requires specific restrictions regarding AI tools or
+        external processing, the client should communicate those requirements
+        before the engagement begins.
+      </p>
+      <h2>18. Limitation of Liability</h2>
+      <p>
+        To the maximum extent permitted by applicable law, Real Product will not
+        be liable for indirect, incidental or consequential losses, including
+        loss of profits, revenue, business opportunities or data, arising from
+        the use of the website or professional services.
+      </p>
+      <p>
+        For paid professional engagements, and except where applicable law
+        prohibits such limitation, Real Product's aggregate liability relating
+        to a specific engagement will not exceed the total amount actually paid
+        by the client to Real Product for that engagement.
+      </p>
+      <p>
+        This limitation does not apply where liability cannot legally be
+        excluded or limited, including where applicable in cases of fraud,
+        wilful misconduct or other mandatory legal liability.
+      </p>
+      <h2>19. Website Availability</h2>
+      <p>
+        Real Product does not guarantee that this website will always be
+        available, uninterrupted or error-free.
+      </p>
+      <p>
+        The website may be modified, suspended or discontinued without prior
+        notice.
+      </p>
+      <h2>20. External Links</h2>
+      <p>The website may contain links to third-party websites.</p>
+      <p>
+        Real Product is not responsible for the content, security, availability
+        or privacy practices of third-party websites.
+      </p>
+      <h2>21. Privacy</h2>
+      <p>
+        Personal data submitted through this website or processed in connection
+        with the services is handled in accordance with the Real Product Privacy
+        Policy and applicable data-protection legislation.
+      </p>
+      <h2>22. Changes to These Terms</h2>
+      <p>
+        These Terms may be updated when the services, website or applicable
+        legal requirements change.
+      </p>
+      <p>
+        The version published on this website at the relevant time will apply,
+        without prejudice to conditions already specifically agreed for an
+        existing engagement.
+      </p>
+      <h2>23. Governing Law and Jurisdiction</h2>
+      <p>These Terms are governed by Spanish law.</p>
+      <p>
+        For professional or business clients, disputes arising from a paid
+        engagement will, where legally permitted, be submitted to the competent
+        courts corresponding to the service provider's domicile.
+      </p>
+      <p>
+        Where the client is a consumer, the mandatory jurisdiction and
+        consumer-protection rules established by Spanish and European Union law
+        will apply.
+      </p>
+      <h2>24. Contact</h2>
+      <p>For questions regarding these Terms or Real Product services:</p>
+      <p>
+        <strong>Víctor Andújar Murcia</strong><br /><strong>Real Product</strong
+        ><br />Avinguda Comte Ramon Berenguer 146, Baixos 2a<br />08690 Santa
+        Coloma de Cervelló, Barcelona, Spain<br /><strong
+          ><a href="mailto:victorandujarmurcia@gmail.com"
+            >victorandujarmurcia@gmail.com</a
+          ></strong>
       </p>
     </div>
-  </section></Base
->
+  </section>
+</Base>
