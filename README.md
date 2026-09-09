@@ -56,7 +56,7 @@ Copy `.env.example` to `.env` locally. Set the same values in Vercel's environme
 
 | Variable                   | Purpose                                                                                                              |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `PUBLIC_SITE_URL`          | Verified HTTPS production origin. Build-time canonical, schema, RSS and sitemap base. Default `https://example.com`. |
+| `SITE_URL`                 | Verified HTTPS production origin. Build-time canonical, schema, RSS and sitemap base. Default `https://example.com`. |
 | `PUBLIC_LAUNCH_READY`      | Defaults false. Controls sitewide noindex and robots blocking. Set true only after the launch checklist below.       |
 | `CONTACT_EMAIL`            | Inbox receiving requests. Server only.                                                                               |
 | `RESEND_API_KEY`           | Resend email API key. Server only.                                                                                   |
@@ -72,7 +72,7 @@ The endpoint accepts same-origin JSON requests only, limits body size to 20KB, u
 
 ## Launch checklist
 
-1. Choose and verify the domain. Set `PUBLIC_SITE_URL` consistently for the production build. Preview deployments should retain `PUBLIC_LAUNCH_READY=false`.
+1. Choose and verify the domain. Set `SITE_URL` consistently for the production build. Preview deployments should retain `PUBLIC_LAUNCH_READY=false`.
 2. Complete the clearly marked legal drafts: identity, contact, jurisdiction, processing details, retention, contract and cancellation terms. Review the final service description and founder copy.
 3. Configure verified Resend delivery and the shared rate limiter. Send an authorised test request and confirm the receiving inbox and reply-to address. Test provider failure and the 429 limit in preview.
 4. Confirm the review scope, timing, deliverables and fee for the initial offer. Prices remain unpublished; edit `site.prices` when the commercial decision is made.

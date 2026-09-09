@@ -53,6 +53,8 @@ export const leadProvider: LeadProvider = {
         'Sender domain is not verified in Resend',
       );
     if (error || !data?.id)
-      throw new Error('Email provider did not confirm acceptance');
+      throw new Error(
+        `Email provider did not confirm acceptance${error ? `: ${error.name} — ${error.message}` : ''}`,
+      );
   },
 };

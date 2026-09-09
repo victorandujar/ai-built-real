@@ -1,5 +1,8 @@
 import { createHash } from 'node:crypto';
 import { serverEnv } from './env';
+
+/** The shared limiter is unreachable or unconfigured: the request never ran. */
+export class RateLimitUnavailable extends Error {}
 const local = new Map<string, { count: number; until: number }>();
 export async function allowRequest(ip: string): Promise<boolean> {
   const key = `reality:lead:${createHash('sha256').update(ip).digest('hex')}`;
@@ -16,14 +19,22 @@ export async function allowRequest(ip: string): Promise<boolean> {
       body: JSON.stringify(['EVAL', script, '1', key]),
       signal: AbortSignal.timeout(3000),
     });
-    if (!response.ok) throw new Error('Rate limit unavailable');
+    if (!response.ok)
+      throw new RateLimitUnavailable(
+        `Upstash replied ${response.status} ${response.statusText}`,
+      );
     const data: { result?: number; error?: string } = await response.json();
     if (typeof data.result !== 'number')
-      throw new Error('Invalid rate limit response');
+      throw new RateLimitUnavailable(
+        `Upstash returned no counter${data.error ? `: ${data.error}` : ''}`,
+      );
     return data.result <= 5;
   }
   // Fail closed in production: serverless memory is not a shared limiter.
-  if (import.meta.env.PROD) throw new Error('Shared rate limit not configured');
+  if (import.meta.env.PROD)
+    throw new RateLimitUnavailable(
+      'UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN are missing in this environment',
+    );
   const now = Date.now();
   for (const [k, v] of local) if (v.until < now) local.delete(k);
   const bucket = local.get(key) || { count: 0, until: now + 600000 };

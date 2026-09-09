@@ -22,7 +22,11 @@ const t = useTranslations(lang);
         {t.about.h2[0]}<br />{t.about.h2[1]}
       </h2><p class="lead muted mt-8">{t.meta.founderRole}</p>
     </div><div class="prose">
-      {t.about.body.map((copy) => <p>{copy}</p>)}<h2>{t.about.wheelTitle}</h2>{
+      {t.about.body.map((copy) => <p>{copy}</p>)}<h2>
+        {t.about.backgroundTitle}
+      </h2>{t.about.backgroundBody.map((copy) => <p>{copy}</p>)}<ul>
+        {t.about.backgroundList.map((item) => <li>{item}</li>)}
+      </ul><h2>{t.about.wheelTitle}</h2>{
         t.about.wheelBody.map((copy) => <p>{copy}</p>)
       }<h2>{t.about.expectTitle}</h2><ul>
         {t.about.expect.map((item) => <li>{item}</li>)}

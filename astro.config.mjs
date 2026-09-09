@@ -4,13 +4,11 @@ import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
 import { loadEnv } from 'vite';
 import { registryAlternates } from './src/i18n/routes.ts';
-const env = loadEnv(
-  process.env.NODE_ENV || 'production',
-  process.cwd(),
+const env = loadEnv(process.env.NODE_ENV || 'production', process.cwd(), [
   'PUBLIC_',
-);
-const site =
-  process.env.PUBLIC_SITE_URL || env.PUBLIC_SITE_URL || 'https://example.com';
+  'SITE_URL',
+]);
+const site = process.env.SITE_URL || env.SITE_URL || 'https://example.com';
 if (
   (process.env.PUBLIC_LAUNCH_READY || env.PUBLIC_LAUNCH_READY) === 'true' &&
   (new URL(site).protocol !== 'https:' ||

@@ -265,6 +265,19 @@ export const en = {
       'AI has opened that process to far more people. Founders can explore an idea, build something useful and learn from it without assembling a whole team first.',
       "I want more of those products to make it into people's hands.",
     ],
+    backgroundTitle: 'Where the judgement comes from',
+    backgroundBody: [
+      'Before this, I spent years building products that other people depend on: SaaS platforms and international B2B commerce, as a senior engineer and as the person defining how the front end was put together.',
+      'That work is where the checklist comes from. Checkout and payment flows that cannot quietly lose an order. Authentication and access rules that hold when someone pokes at them. Catalogues, search and filtering that stay fast as the data grows. Multi-language products that behave the same in every market. Automated tests that catch the regression before a user does.',
+      'None of that is exotic. It is the unglamorous layer that separates something that demos well from something that survives real use, and it is what I look for in your product.',
+    ],
+    backgroundList: [
+      'Product journeys, from first screen to confirmation.',
+      'Payments, checkout and the paths that fail around them.',
+      'Authentication, access rules and who can see what.',
+      'Performance and behaviour as real data arrives.',
+      'Test coverage where a break would actually hurt.',
+    ],
     wheelTitle: 'You keep the wheel.',
     wheelBody: [
       'Real product exists for the stage after the first working version. When you need to know whether a stranger can use it, whether access rules hold up and whether the important flows recover when something goes wrong.',

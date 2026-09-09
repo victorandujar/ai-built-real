@@ -1,5 +1,5 @@
 export const site = {
-  url: import.meta.env.PUBLIC_SITE_URL || 'https://example.com',
+  url: import.meta.env.SITE || 'https://example.com',
   launchReady: import.meta.env.PUBLIC_LAUNCH_READY === 'true',
   founder: { name: 'Víctor Andújar' },
   prices: {

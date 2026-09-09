@@ -277,6 +277,19 @@ export const es: Translation = {
       'La IA ha abierto ese proceso a muchísimas más personas. Ahora se puede explorar una idea, construir algo útil y aprender de ello sin montar antes un equipo entero.',
       'Quiero que más de esos productos lleguen a manos de la gente.',
     ],
+    backgroundTitle: 'De dónde sale ese criterio',
+    backgroundBody: [
+      'Antes de esto pasé años construyendo productos de los que dependía otra gente: plataformas SaaS y e-commerce B2B internacional, como ingeniero senior y como la persona que definía cómo se armaba el front.',
+      'De ahí sale la lista de cosas que reviso. Flujos de checkout y pago que no pueden perder un pedido en silencio. Autenticación y reglas de acceso que aguantan cuando alguien las tantea. Catálogos, búsqueda y filtros que siguen siendo rápidos cuando crecen los datos. Productos multiidioma que se comportan igual en cada mercado. Tests automáticos que detectan la regresión antes que un usuario.',
+      'Nada de eso es exótico. Es la capa poco vistosa que separa lo que queda bien en una demo de lo que aguanta el uso real, y es lo que busco en tu producto.',
+    ],
+    backgroundList: [
+      'Los recorridos de producto, desde la primera pantalla hasta la confirmación.',
+      'Pagos, checkout y los caminos que fallan a su alrededor.',
+      'Autenticación, reglas de acceso y quién puede ver qué.',
+      'Rendimiento y comportamiento cuando llegan datos reales.',
+      'Cobertura de tests donde romper algo duele de verdad.',
+    ],
     wheelTitle: 'El volante sigue siendo tuyo.',
     wheelBody: [
       'Real product existe para la etapa posterior a la primera versión que funciona. Cuando necesitas saber si una persona desconocida sabrá usarlo, si las reglas de acceso aguantan y si los flujos importantes se recuperan cuando algo sale mal.',

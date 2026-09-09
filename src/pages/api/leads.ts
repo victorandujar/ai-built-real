@@ -8,7 +8,7 @@ import {
   ProviderUnavailable,
   SenderDomainUnverified,
 } from '@/lib/server/lead-provider';
-import { allowRequest } from '@/lib/server/rate-limit';
+import { allowRequest, RateLimitUnavailable } from '@/lib/server/rate-limit';
 export const prerender = false;
 const reply = (
   status: number,
@@ -26,7 +26,6 @@ const reply = (
     },
   });
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  // Before the body is validated the only locale hint is the browser's own.
   let locale = localeFromRequest(request);
   if (request.headers.get('origin') !== new URL(request.url).origin)
     return reply(403, locale, 'wrongOrigin');
@@ -61,7 +60,6 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     locale = parsed.data.locale;
     if (!(await allowRequest(clientAddress)))
       return reply(429, locale, 'rateLimited', { 'Retry-After': '600' });
-    // Key derived from validated payload keeps network retries idempotent.
     const { createHash } = await import('node:crypto');
     const id = createHash('sha256')
       .update(JSON.stringify(parsed.data))
@@ -77,10 +75,23 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         503,
         locale,
         import.meta.env.DEV ? 'unverifiedDev' : 'unverified',
+        { 'X-Lead-Failure': 'sender-unverified' },
       );
     }
-    if (error instanceof ProviderUnavailable)
-      return reply(503, locale, 'notOpen');
-    return reply(503, locale, 'unconfirmed');
+    if (error instanceof ProviderUnavailable) {
+      console.error('[leads] Delivery is not configured:', error.message);
+      return reply(503, locale, 'notOpen', {
+        'X-Lead-Failure': 'not-configured',
+      });
+    }
+    if (error instanceof RateLimitUnavailable) {
+      console.error('[leads] Shared rate limit unusable:', error.message);
+      return reply(503, locale, 'unconfirmed', {
+        'X-Lead-Failure': 'rate-limit',
+      });
+    }
+    // Anything else is unexpected: log it, or the 503 is undebuggable.
+    console.error('[leads] Submission failed', error);
+    return reply(503, locale, 'unconfirmed', { 'X-Lead-Failure': 'unknown' });
   }
 };
