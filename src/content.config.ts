@@ -11,6 +11,8 @@ const learn = defineCollection({
     category: z.string(),
     order: z.number(),
     draft: z.boolean().default(false),
+    /** Groups an article with its translations across locale folders. */
+    translationKey: z.string(),
   }),
 });
 const work = defineCollection({
@@ -22,4 +24,13 @@ const work = defineCollection({
     clientApproved: z.boolean().default(false),
   }),
 });
-export const collections = { learn, work };
+const legal = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/legal' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    updated: z.string(),
+    translationKey: z.string(),
+  }),
+});
+export const collections = { learn, work, legal };

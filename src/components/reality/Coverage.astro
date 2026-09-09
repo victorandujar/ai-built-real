@@ -1,22 +1,28 @@
 ---
-import { coverage } from '@/config/coverage';
+import { useTranslations } from '@/i18n';
+import type { Locale } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <div class="coverage">
   {
-    coverage.map(([category, title, description], i) => (
+    t.coverage.map((lens, i) => (
       <details open={i === 0}>
         <>
           <summary>
             <span>
               <>
                 <small class="mono">0{i + 1}</small>
-                <strong>{category}</strong>
+                <strong>{lens.category}</strong>
               </>
             </span>
           </summary>
-          <h3 class="mb-4">{title}</h3>
-          <p>{description}</p>
+          <h3 class="mb-4">{lens.title}</h3>
+          <p>{lens.description}</p>
         </>
       </details>
     ))

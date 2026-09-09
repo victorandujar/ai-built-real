@@ -7,7 +7,8 @@ export type AnalyticsEvent =
   | 'pricing_viewed'
   | 'reality_sprint_clicked'
   | 'article_cta_clicked'
-  | 'tool_selected';
+  | 'tool_selected'
+  | 'language_switched';
 export function track(
   name: AnalyticsEvent,
   properties: Record<string, string | number | boolean> = {},

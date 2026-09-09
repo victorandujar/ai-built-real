@@ -5,6 +5,7 @@ category: 'Readiness'
 published: '2026-09-07'
 order: 1
 draft: false
+translationKey: 'production-ready'
 ---
 
 Your app works. You can sign in, create something and show a friend. That is real progress. It also leaves an important question unanswered: what happens when someone uses it without you nearby?

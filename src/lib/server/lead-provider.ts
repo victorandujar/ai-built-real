@@ -19,6 +19,7 @@ const labels: Record<string, string> = {
   repository: 'Repository (optional)',
   uncertainty: 'Main uncertainty',
   interest: 'Interested in',
+  locale: 'Language to reply in',
 };
 export const leadProvider: LeadProvider = {
   async submit(lead, id) {

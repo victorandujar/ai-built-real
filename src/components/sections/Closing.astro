@@ -1,13 +1,20 @@
 ---
 import Button from '@/components/ui/Button.astro';
+import { useTranslations } from '@/i18n';
+import type { Locale } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <section class="closing">
   <div class="wrap">
     <div>
-      <p class="eyebrow">The next step is a small one.</p><h2>
-        You built it.<br />Let's see if it's ready.
+      <p class="eyebrow">{t.closing.eyebrow}</p><h2>
+        {t.closing.title[0]}<br />{t.closing.title[1]}
       </h2>
-    </div><Button />
+    </div><Button lang={lang} />
   </div>
 </section>

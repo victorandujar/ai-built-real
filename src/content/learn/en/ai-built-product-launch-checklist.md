@@ -5,6 +5,7 @@ category: 'Launch guide'
 published: '2026-09-07'
 order: 2
 draft: false
+translationKey: 'launch-checklist'
 ---
 
 A checklist is useful when it changes what you do. It becomes noise when it treats every unfinished detail as a launch blocker.

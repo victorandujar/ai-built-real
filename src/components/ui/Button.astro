@@ -1,13 +1,18 @@
 ---
-import { site } from '@/config/site';
 import Arrow from './Arrow.astro';
+import { useTranslations, path } from '@/i18n';
+import type { Locale } from '@/i18n';
 interface Props {
+  lang: Locale;
   href?: string;
   label?: string;
   light?: boolean;
   event?: string;
 }
-const { href = '/check', label = site.cta, light = false, event } = Astro.props;
+const { lang, light = false, event } = Astro.props;
+const t = useTranslations(lang);
+const href = Astro.props.href ?? path('check', lang);
+const label = Astro.props.label ?? t.common.cta;
 ---
 
 <a href={href} class:list={['button', { light }]} data-event={event}

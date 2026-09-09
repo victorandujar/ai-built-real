@@ -323,6 +323,32 @@
   .nav-links > a[aria-current='page']::after {
     transform: scaleX(1);
   }
+  .lang-switch {
+    font: 0.7rem var(--font-mono);
+    text-decoration: underline;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: bold;
+    border-radius: 30px;
+    padding: 0.4rem 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    transition:
+      color var(--duration),
+      border-color var(--duration);
+  }
+  .nav-links > a.lang-switch::after {
+    content: none;
+  }
+  .lang-switch abbr {
+    text-decoration: none;
+    border: 0;
+  }
+  .lang-switch:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
   .nav .button {
     min-height: 44px;
     font-size: 0.71rem;
@@ -1421,6 +1447,10 @@
     }
     .nav-links > a {
       min-height: 44px;
+    }
+    .lang-switch {
+      min-height: 44px;
+      order: -1;
     }
     .nav .button {
       margin-left: auto;

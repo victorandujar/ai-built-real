@@ -1,9 +1,21 @@
 ---
 import { site, absolute } from '@/config/site';
+import {
+  useTranslations,
+  alternatesFor,
+  translatePath,
+  localeTags,
+  ogLocales,
+  defaultLocale,
+  path,
+} from '@/i18n';
+import type { Locale } from '@/i18n';
 interface Props {
+  lang: Locale;
   title: string;
   description?: string;
   noindex?: boolean;
+  alternates?: Partial<Record<Locale, string>>;
   article?: {
     title: string;
     description: string;
@@ -11,19 +23,18 @@ interface Props {
     updated?: string;
   };
 }
-const {
-  title,
-  description = site.description,
-  noindex = false,
-  article,
-} = Astro.props;
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-const canonical = absolute(path);
-const fullTitle = `${title} | ${site.shortName}`;
+const { lang, title, noindex = false, article, alternates } = Astro.props;
+const t = useTranslations(lang);
+const description = Astro.props.description ?? t.meta.description;
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const canonical = absolute(current);
+const fullTitle = `${title} | ${t.meta.shortName}`;
+const languages = alternatesFor(current, site.url, alternates);
+const xDefault = translatePath(current, defaultLocale, alternates);
 const org = {
   '@type': 'Organization',
   '@id': absolute('/#organization'),
-  name: site.name,
+  name: t.meta.siteName,
   url: site.url,
   logo: absolute('/icon.png'),
   founder: { '@id': absolute('/about#person') },
@@ -34,62 +45,70 @@ const graph: Record<string, unknown>[] = [
     '@type': 'WebSite',
     '@id': absolute('/#website'),
     url: site.url,
-    name: site.name,
-    inLanguage: 'en',
+    name: t.meta.siteName,
+    inLanguage: localeTags[lang],
     publisher: { '@id': absolute('/#organization') },
   },
 ];
-if (path !== '/')
+const isArticle = current.startsWith(`${path('learn', lang)}/`);
+if (current !== path('home', lang))
   graph.push({
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: absolute('/') },
-      ...(path.startsWith('/learn/')
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: t.common.home,
+        item: absolute(path('home', lang)),
+      },
+      ...(isArticle
         ? [
             {
               '@type': 'ListItem',
               position: 2,
-              name: 'Field notes',
-              item: absolute('/learn'),
+              name: t.learn.breadcrumb,
+              item: absolute(path('learn', lang)),
             },
           ]
         : []),
       {
         '@type': 'ListItem',
-        position: path.startsWith('/learn/') ? 3 : 2,
+        position: isArticle ? 3 : 2,
         name: title,
         item: canonical,
       },
     ],
   });
-if (path === '/about')
+if (current === path('about', lang))
   graph.push({
     '@type': 'Person',
     '@id': absolute('/about#person'),
     name: site.founder.name,
-    jobTitle: site.founder.role,
-    url: absolute('/about'),
+    jobTitle: t.meta.founderRole,
+    url: absolute(path('about', lang)),
   });
-if (path === '/' || path === '/reality-check')
+if (current === path('home', lang) || current === path('realityCheck', lang))
   graph.push({
     '@type': 'Service',
     name: 'Reality Check',
-    serviceType: 'Product readiness review for AI-built products',
-    url: absolute('/reality-check'),
+    serviceType: t.meta.serviceType,
+    url: absolute(path('realityCheck', lang)),
     provider: { '@id': absolute('/#organization') },
-    description: site.description,
+    description: t.meta.description,
+    availableLanguage: ['en', 'es'],
   });
 if (article)
   graph.push({
     '@type': 'Article',
     headline: article.title,
     description: article.description,
+    inLanguage: localeTags[lang],
     datePublished: article.published,
     ...(article.updated ? { dateModified: article.updated } : {}),
     author: {
       '@type': 'Person',
       name: site.founder.name,
-      url: absolute('/about'),
+      url: absolute(path('about', lang)),
     },
     publisher: { '@id': absolute('/#organization') },
     image: absolute('/og.png'),
@@ -100,7 +119,11 @@ if (article)
 <title>{fullTitle}</title><meta name="description" content={description} /><link
   rel="canonical"
   href={canonical}
-/><meta
+/>{
+  languages.map((alternate) => (
+    <link rel="alternate" hreflang={alternate.locale} href={alternate.href} />
+  ))
+}<link rel="alternate" hreflang="x-default" href={absolute(xDefault)} /><meta
   name="robots"
   content={noindex || !site.launchReady ? 'noindex, follow' : 'index, follow'}
 /><meta property="og:type" content={article ? 'article' : 'website'} /><meta
@@ -109,15 +132,24 @@ if (article)
 /><meta property="og:description" content={description} /><meta
   property="og:url"
   content={canonical}
-/><meta property="og:site_name" content={site.name} /><meta
+/><meta property="og:site_name" content={t.meta.siteName} /><meta
   property="og:locale"
-  content="en_US"
-/><meta property="og:image" content={absolute('/og.png')} /><meta
+  content={ogLocales[lang]}
+/>{
+  languages
+    .filter((alternate) => alternate.locale !== lang)
+    .map((alternate) => (
+      <meta
+        property="og:locale:alternate"
+        content={ogLocales[alternate.locale]}
+      />
+    ))
+}<meta property="og:image" content={absolute('/og.png')} /><meta
   property="og:image:width"
   content="1200"
 /><meta property="og:image:height" content="630" /><meta
   property="og:image:alt"
-  content="AI-built. Real product. Ready for what comes next."
+  content={t.meta.ogImageAlt}
 /><meta name="twitter:card" content="summary_large_image" /><meta
   name="twitter:title"
   content={fullTitle}

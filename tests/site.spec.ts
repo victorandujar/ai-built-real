@@ -15,6 +15,30 @@ const routes = [
   '/learn/when-your-prototype-gets-real-users',
   '/privacy',
   '/terms',
+  '/es',
+  '/es/reality-check',
+  '/es/sobre-mi',
+  '/es/solicitud',
+  '/es/notas',
+  '/es/notas/tu-app-hecha-con-ia-esta-lista-para-produccion',
+  '/es/notas/checklist-de-lanzamiento-para-productos-con-ia',
+  '/es/notas/cuando-tu-prototipo-recibe-usuarios-reales',
+  '/es/privacidad',
+  '/es/terminos',
+];
+/** Each entry is a page and its counterpart in the other language. */
+const translated = [
+  ['/', '/es'],
+  ['/reality-check', '/es/reality-check'],
+  ['/about', '/es/sobre-mi'],
+  ['/check', '/es/solicitud'],
+  ['/learn', '/es/notas'],
+  ['/privacy', '/es/privacidad'],
+  ['/terms', '/es/terminos'],
+  [
+    '/learn/when-your-prototype-gets-real-users',
+    '/es/notas/cuando-tu-prototipo-recibe-usuarios-reales',
+  ],
 ];
 test('pages have valid metadata, structure and no broken internal links', async ({
   page,
@@ -245,4 +269,115 @@ test('home scenes are keyboard accessible and review lenses disclose one at a ti
     page.getByRole('heading', { name: 'Can you keep building on it?' }),
   ).toBeVisible();
   await expect(page.locator('.journal-volume')).toHaveCount(3);
+});
+
+test('every page declares its language and reciprocal hreflang alternates', async ({
+  page,
+}) => {
+  for (const [en, es] of translated) {
+    for (const [route, lang] of [
+      [en, 'en'],
+      [es, 'es'],
+    ] as const) {
+      await page.goto(route);
+      expect(await page.locator('html').getAttribute('lang'), route).toBe(lang);
+      for (const [alternate, hreflang] of [
+        [en, 'en'],
+        [es, 'es'],
+      ] as const)
+        expect(
+          await page
+            .locator(`link[rel="alternate"][hreflang="${hreflang}"]`)
+            .getAttribute('href'),
+          `${route} -> ${hreflang}`,
+        ).toBe(`https://example.com${alternate === '/' ? '/' : alternate}`);
+      expect(
+        await page
+          .locator('link[rel="alternate"][hreflang="x-default"]')
+          .getAttribute('href'),
+        route,
+      ).toBe(`https://example.com${en === '/' ? '/' : en}`);
+    }
+  }
+});
+
+test('the language switcher moves between counterpart pages', async ({
+  page,
+}) => {
+  for (const [en, es] of translated) {
+    await page.goto(en);
+    await page.getByRole('link', { name: 'Español' }).click();
+    await expect(page).toHaveURL(new RegExp(`${es}$`));
+    await page.getByRole('link', { name: 'English' }).click();
+    await expect(page).toHaveURL(new RegExp(`${en === '/' ? '/$' : en + '$'}`));
+  }
+});
+
+test('the Spanish request form submits in Spanish', async ({ page }) => {
+  await page.route('**/api/leads', (route) => {
+    expect(JSON.parse(route.request().postData() || '{}').locale).toBe('es');
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ message: 'Solicitud recibida' }),
+    });
+  });
+  await page.goto('/es/solicitud');
+  await page
+    .getByLabel('URL del producto', { exact: true })
+    .fill('https://example.org');
+  await page
+    .getByLabel('¿Qué hace tu producto?')
+    .fill('Una herramienta de reservas para creadoras independientes.');
+  await choose(page, '¿Con qué lo has construido?', 'Lovable');
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await choose(page, '¿Ya tienes usuarios?', 'Usuarios beta');
+  await choose(page, '¿Cobras pagos?', 'Pronto');
+  await choose(page, '¿Maneja datos de clientes o personales?', 'Sí');
+  await choose(page, '¿Qué tienes planeado ahora?', 'Lanzamiento');
+  await page
+    .getByLabel('¿Qué es lo que más dudas te genera?')
+    .fill('Los límites entre cuentas y la recuperación del checkout.');
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await page.getByLabel('Tu nombre', { exact: true }).fill('Prueba');
+  await page.getByLabel('Email', { exact: true }).fill('builder@example.org');
+  await page.getByRole('checkbox').check();
+  await page.getByRole('button', { name: 'Enviar mi solicitud' }).click();
+  await expect(page.locator('#form-success')).toBeVisible();
+  await expect(page.locator('#success-email')).toHaveText(
+    'builder@example.org',
+  );
+});
+
+test('Spanish pages are accessible and stay within the viewport', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 1000 });
+  for (const route of [
+    '/es',
+    '/es/solicitud',
+    '/es/reality-check',
+    '/es/notas',
+  ]) {
+    await page.goto(route);
+    await page.evaluate(() => document.fonts.ready);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+      route,
+    ).toBeTruthy();
+    const result = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+      .analyze();
+    // Contrast is a site-wide brand issue already asserted by the English suite
+    // above. This test targets regressions specific to the translation: longer
+    // strings, translated labels and per-locale markup.
+    expect(
+      result.violations
+        .filter((v) => v.id !== 'color-contrast')
+        .map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) })),
+      route,
+    ).toEqual([]);
+  }
 });

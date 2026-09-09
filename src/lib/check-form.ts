@@ -1,8 +1,10 @@
 import { animate } from 'animejs';
 import { enhanceSelects, focusField } from './selects';
 import { track } from './analytics';
+import { clientStrings } from '@/i18n/client';
 const form = document.querySelector<HTMLFormElement>('#check-form');
 if (form) {
+  const t = clientStrings();
   enhanceSelects(form);
   const guidance = form.querySelector<HTMLElement>('#step-guidance')!;
   const requestObject = document.querySelector<HTMLElement>(
@@ -33,6 +35,13 @@ if (form) {
     busy = false;
   const getField = (name: string) =>
     form.elements.namedItem(name) as Field | null;
+  /** Option values stay English for the schema; the summary shows what was read. */
+  const chosenText = (name: string) => {
+    const field = getField(name);
+    return field instanceof HTMLSelectElement
+      ? (field.selectedOptions[0]?.text ?? '')
+      : (field?.value ?? '');
+  };
   function fieldError(field: Field, message: string) {
     const target = document.getElementById(`${field.name}-error`);
     field.setAttribute('aria-invalid', String(Boolean(message)));
@@ -44,11 +53,11 @@ if (form) {
   function messageFor(field: Field) {
     const value = field.value.trim();
     if (field instanceof HTMLInputElement && field.type === 'checkbox')
-      return field.checked ? '' : 'Please agree before sending your request.';
+      return field.checked ? '' : t.form.errors.consent;
     if (field.required && !value)
       return field instanceof HTMLSelectElement
-        ? 'Choose an option to continue.'
-        : 'Please fill in this field.';
+        ? t.form.errors.chooseOption
+        : t.form.errors.required;
     if (!value) return '';
     if (field instanceof HTMLInputElement && field.type === 'url') {
       try {
@@ -58,9 +67,9 @@ if (form) {
           url.username ||
           url.password
         )
-          return 'Use a full http or https URL without credentials.';
+          return t.form.errors.urlCredentials;
       } catch {
-        return 'Enter a full URL, like https://your-product.com.';
+        return t.form.errors.url;
       }
     }
     if (
@@ -68,17 +77,17 @@ if (form) {
       field.type === 'email' &&
       field.validity.typeMismatch
     )
-      return 'Enter a valid email, like you@example.com.';
+      return t.form.errors.email;
     if (
       'minLength' in field &&
       field.minLength > 0 &&
       value.length < field.minLength
     )
       return field.name === 'description'
-        ? 'Give us a little more detail (at least 10 characters).'
+        ? t.form.errors.description
         : field.name === 'name'
-          ? 'Please enter at least 2 characters.'
-          : 'Add a little more detail (at least 5 characters).';
+          ? t.form.errors.name
+          : t.form.errors.minLength;
     return field.validity.valid ? '' : field.validationMessage;
   }
   function validateStep() {
@@ -92,8 +101,7 @@ if (form) {
     }
     if (first) {
       focusField(first);
-      guidance.textContent =
-        'A little more detail needed. Check the highlighted fields.';
+      guidance.textContent = t.form.needsDetail;
       return false;
     }
     return true;
@@ -101,18 +109,11 @@ if (form) {
   function show() {
     form!.dispatchEvent(new CustomEvent('choices:close'));
     form!.dataset.state = 'editing';
-    guidance.textContent = [
-      'Three small steps. Start with your product.',
-      'A little context helps us focus the review.',
-      'One last step. Review your brief and leave your email.',
-    ][current];
+    guidance.textContent = t.form.guidance[current];
     if (requestObject) {
       requestObject.dataset.stage = String(current);
-      requestObject.querySelector('[data-brief-caption]')!.textContent = [
-        '01 — Start with what you built.',
-        '02 — Give it a direction.',
-        '03 — Put a person behind it.',
-      ][current];
+      requestObject.querySelector('[data-brief-caption]')!.textContent =
+        t.form.briefCaptions[current];
     }
     steps.forEach((step, i) => {
       step.hidden = i !== current;
@@ -122,7 +123,7 @@ if (form) {
     next.hidden = current === 2;
     submit.hidden = current !== 2;
     form!.querySelector('#step-label')!.textContent =
-      `0${current + 1} / ${['Your product', 'Your next step', 'Your details'][current]}`;
+      `0${current + 1} / ${t.form.stepNames[current]}`;
     (form!.querySelector('.form-progress i') as HTMLElement).style.width =
       `${((current + 1) / 3) * 100}%`;
     progressButtons.forEach((button, i) => {
@@ -136,8 +137,10 @@ if (form) {
     if (current === 2) {
       form!.querySelector('#review-product')!.textContent =
         getField('productUrl')?.value || '';
-      form!.querySelector('#review-stage')!.textContent =
-        `Built with ${getField('tool')?.value} · Next: ${getField('next')?.value}`;
+      form!.querySelector('#review-stage')!.textContent = t.form.reviewStage(
+        chosenText('tool'),
+        chosenText('next'),
+      );
     }
     steps[current]
       .querySelector<HTMLElement>('legend')
@@ -208,17 +211,16 @@ if (form) {
     form!.dispatchEvent(new CustomEvent('choices:close'));
     if (value) {
       form!.dataset.state = 'sending';
-      form!.querySelector('#sending-message')!.textContent =
-        'Sending your request. Please keep this tab open.';
+      form!.querySelector('#sending-message')!.textContent = t.form.sending;
       sendTimer = setTimeout(() => {
         form!.querySelector('#sending-message')!.textContent =
-          'Still waiting for confirmation. Your details are safe here.';
+          t.form.stillSending;
       }, 6000);
     } else {
       clearTimeout(sendTimer);
     }
     sending.hidden = !value;
-    label.textContent = value ? 'Sending…' : 'Send my request';
+    label.textContent = value ? t.form.sendingLabel : t.form.submit;
     icon.classList.toggle('spinner', value);
     icon.textContent = value ? '' : '↗';
   }
@@ -261,7 +263,7 @@ if (form) {
             steps.findIndex((s) => s.contains(field)),
           );
           show();
-          fieldError(field, issue?.message || 'Please check this field.');
+          fieldError(field, issue?.message || t.form.errors.generic);
           focusField(field);
         }
         return;
@@ -269,7 +271,10 @@ if (form) {
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(parsed.data),
+        body: JSON.stringify({
+          ...parsed.data,
+          locale: document.documentElement.lang.slice(0, 2),
+        }),
         signal: AbortSignal.timeout(18000),
       });
       let result: { message?: string } = {};
@@ -279,20 +284,15 @@ if (form) {
       if (!response.ok) {
         alertTitle.textContent =
           response.status === 429
-            ? 'A few too many attempts.'
+            ? t.form.alerts.tooMany
             : response.status === 503
-              ? 'Your request has not been confirmed.'
-              : 'Something needs another look.';
-        throw new Error(
-          result.message ||
-            'The service is temporarily unavailable. Your details are still here; please try again.',
-        );
+              ? t.form.alerts.unconfirmed
+              : t.form.alerts.needsLook;
+        throw new Error(result.message || t.form.alerts.unavailable);
       }
       if (typeof result.message !== 'string' || !result.message.trim()) {
-        alertTitle.textContent = 'We couldn’t confirm delivery.';
-        throw new Error(
-          'The server returned an unexpected response. Your details are still here. Please try again.',
-        );
+        alertTitle.textContent = t.form.alerts.undelivered;
+        throw new Error(t.form.alerts.unexpected);
       }
       submitted = true;
       form.dataset.state = 'success';
@@ -318,14 +318,11 @@ if (form) {
         err instanceof Error &&
         ['TimeoutError', 'AbortError', 'TypeError'].includes(err.name)
       ) {
-        alertTitle.textContent = 'We couldn’t confirm delivery.';
-        alertMessage.textContent =
-          'Check your connection and try again. Your details are still here; you do not need to fill them in again.';
+        alertTitle.textContent = t.form.alerts.undelivered;
+        alertMessage.textContent = t.form.alerts.offline;
       } else {
         alertMessage.textContent =
-          err instanceof Error
-            ? err.message
-            : 'Please try again in a moment. Your details are still here.';
+          err instanceof Error ? err.message : t.form.alerts.retry;
       }
       alert.hidden = false;
       alert.focus({ preventScroll: true });
@@ -333,7 +330,7 @@ if (form) {
         animate(alert, { opacity: [0, 1], translateY: [5, 0], duration: 220 });
     } finally {
       setBusy(false);
-      if (!submitted && !alert.hidden) label.textContent = 'Try again';
+      if (!submitted && !alert.hidden) label.textContent = t.form.tryAgain;
     }
   });
   window.addEventListener('pagehide', () => {

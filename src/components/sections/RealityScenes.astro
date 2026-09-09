@@ -1,68 +1,29 @@
 ---
-const scenes = [
-  {
-    name: 'The first stranger.',
-    title: 'You are no longer there to explain it.',
-    copy: 'Someone opens your product with no context, no instructions and very little patience. Can they find their first useful result?',
-    label: '01 / THE EXPERIENCE',
-    from: 'Your familiar workflow',
-    to: 'Their very first visit',
-    note: 'Follow the journey with a fresh account.',
-    kind: 'users',
-  },
-  {
-    name: 'The second account.',
-    title: 'Two customers. Two separate worlds.',
-    copy: 'A product can look private and still expose the wrong information. We check what a second account can actually see and change.',
-    label: '02 / THE BOUNDARIES',
-    from: 'Customer A',
-    to: 'Customer B',
-    note: 'Check access where the data lives.',
-    kind: 'data',
-  },
-  {
-    name: 'The interrupted payment.',
-    title: 'Paid. But did the product catch up?',
-    copy: 'Checkout is only part of the story. The payment can succeed while access fails, or the same event can arrive twice. Recovery matters.',
-    label: '03 / THE HANDOFF',
-    from: 'Payment accepted',
-    to: 'Access granted?',
-    note: 'Trace the handoff, including the unhappy path.',
-    kind: 'payments',
-  },
-  {
-    name: 'The unexpected Tuesday.',
-    title: 'Something breaks. Who notices?',
-    copy: 'An expired key. A slow dependency. A release that changes a small assumption. We look for enough visibility to understand what happened.',
-    label: '04 / THE EVERYDAY',
-    from: 'Something changed',
-    to: 'Someone knows',
-    note: 'Make failure visible and recovery possible.',
-    kind: 'life',
-  },
-];
+import { useTranslations, path } from '@/i18n';
+import type { Locale } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <section class="reality-stage" data-scenes>
   <div class="wrap">
     <div class="chapter-line">
-      <span class="mono">01 / Out in the world</span><span class="mono"
-        >A working demo is a beginning.</span
+      <span class="mono">{t.scenes.chapter[0]}</span><span class="mono"
+        >{t.scenes.chapter[1]}</span
       >
     </div>
     <div class="scene-heading">
-      <h2>Then reality<br /><em>walks in.</em></h2><p>
-        Your product meets the things<br />you couldn't prompt away.
+      <h2>{t.scenes.heading[0]}<br /><em>{t.scenes.heading[1]}</em></h2><p>
+        {t.scenes.copy[0]}<br />{t.scenes.copy[1]}
       </p>
     </div>
     <div class="scene-layout">
-      <div
-        class="scene-switches"
-        role="tablist"
-        aria-label="Real-world product moments"
-      >
+      <div class="scene-switches" role="tablist" aria-label={t.scenes.tablist}>
         {
-          scenes.map((s, i) => (
+          t.scenes.items.map((scene, i) => (
             <button
               type="button"
               role="tab"
@@ -73,7 +34,7 @@ const scenes = [
             >
               <>
                 <span class="mono">0{i + 1}</span>
-                <span>{s.name}</span>
+                <span>{scene.name}</span>
                 <span aria-hidden="true">↗</span>
               </>
             </button>
@@ -87,13 +48,11 @@ const scenes = [
           aria-hidden="true"
         >
           <div class="orbit-fallback"><i></i><i></i><i></i><b></b></div>
-          <span class="sculpture-coordinate mono"
-            >REAL WORLD / LIVE CONNECTIONS</span
-          >
+          <span class="sculpture-coordinate mono">{t.scenes.coordinate}</span>
           <span class="sculpture-index mono">01—04</span>
         </div>
         {
-          scenes.map((s, i) => (
+          t.scenes.items.map((scene, i) => (
             <article
               role="tabpanel"
               id={`scene-panel-${i}`}
@@ -103,7 +62,7 @@ const scenes = [
             >
               <div class="scene-depth-control">
                 <label for={`scene-depth-${i}`}>
-                  Shift perspective <span aria-hidden="true">↔</span>
+                  {t.scenes.shiftPerspective} <span aria-hidden="true">↔</span>
                 </label>
                 <input
                   id={`scene-depth-${i}`}
@@ -112,17 +71,17 @@ const scenes = [
                   min="0"
                   max="100"
                   value="0"
-                  aria-valuetext="Front perspective"
+                  aria-valuetext={t.scenes.frontPerspective}
                 />
                 <button type="button" class="scene-replay">
-                  Replay the scene <span aria-hidden="true">↺</span>
+                  {t.scenes.replay} <span aria-hidden="true">↺</span>
                 </button>
               </div>
               <div class="scene-caption">
                 <>
-                  <h3>{s.title}</h3>
-                  <p>{s.copy}</p>
-                  <span class="scene-footnote">↳ {s.note}</span>
+                  <h3>{scene.title}</h3>
+                  <p>{scene.copy}</p>
+                  <span class="scene-footnote">↳ {scene.note}</span>
                 </>
               </div>
             </article>
@@ -132,10 +91,8 @@ const scenes = [
     </div>
     <noscript
       ><p class="scene-noscript">
-        We also review separation between accounts, payment recovery and
-        visibility when something breaks. <a href="/reality-check"
-          >Explore the full review.</a
-        >
+        {t.scenes.noscript}{' '}
+        <a href={path('realityCheck', lang)}>{t.scenes.noscriptLink}</a>
       </p></noscript
     >
   </div>

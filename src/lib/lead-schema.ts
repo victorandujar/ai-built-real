@@ -51,5 +51,6 @@ export const leadSchema = z.object({
   consent: z.literal(true),
   website: z.string().max(0),
   interest: z.enum(['check', 'sprint']).default('check'),
+  locale: z.enum(['en', 'es']).default('en'),
 });
 export type Lead = z.infer<typeof leadSchema>;

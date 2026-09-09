@@ -1,63 +1,103 @@
+---
+import { useTranslations, path } from '@/i18n';
+import type { Locale } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+/**
+ * Option values stay in English because the lead schema validates against them.
+ * Only the visible text is translated, via the `value` / label split.
+ */
+const tools = [
+  'Lovable',
+  'Cursor',
+  'Replit',
+  'Bolt',
+  'Claude Code',
+  'Codex',
+  'v0',
+  'Windsurf',
+  'Other',
+];
+const toolLabels: Record<string, string> =
+  lang === 'es' ? { Other: 'Otra' } : {};
+const choices = (values: readonly string[], labels: readonly string[]) =>
+  values.map((value, i) => ({ value, label: labels[i] ?? value }));
+const users = choices(['No', 'Beta users', 'Yes'], t.form.options.users);
+const payments = choices(['No', 'Soon', 'Yes'], t.form.options.payments);
+const data = choices(['Yes', 'No', 'Not sure'], t.form.options.data);
+const next = choices(
+  [
+    'Private testing',
+    'Public beta',
+    'Launch',
+    'Start charging',
+    'Scale existing users',
+    'Other',
+  ],
+  t.form.options.next,
+);
+---
+
 <div class="form-panel">
-  <noscript
-    ><p class="notice">
-      Enable JavaScript to complete the request. Your details are only sent when
-      you choose Send my request.
-    </p></noscript
-  ><form id="check-form" novalidate data-state="editing">
+  <noscript><p class="notice">{t.form.noscript}</p></noscript><form
+    id="check-form"
+    novalidate
+    data-state="editing"
+  >
     <div class="form-top">
       <p class="eyebrow" id="step-label" aria-live="polite">
-        01 / Your product
-      </p><nav class="form-steps" aria-label="Request progress">
-        <button
-          type="button"
-          data-go-step="0"
-          aria-current="step"
-          aria-label="Step 1: Your product">1</button
-        ><button
-          type="button"
-          data-go-step="1"
-          disabled
-          aria-label="Step 2: Your next step">2</button
-        ><button
-          type="button"
-          data-go-step="2"
-          disabled
-          aria-label="Step 3: Your details">3</button
-        >
+        01 / {t.form.stepNames[0]}
+      </p><nav class="form-steps" aria-label={t.form.progressLabel}>
+        {
+          t.form.stepAria.map((aria, i) => (
+            <button
+              type="button"
+              data-go-step={i}
+              disabled={i > 0}
+              aria-current={i === 0 ? 'step' : undefined}
+              aria-label={aria}
+            >
+              {i + 1}
+            </button>
+          ))
+        }
       </nav>
     </div><div class="form-progress" aria-hidden="true"><i></i></div><p
       class="step-guidance"
       id="step-guidance"
       role="status"
     >
-      Three small steps. Start with your product.
+      {t.form.guidance[0]}
     </p>
     <fieldset data-step="0">
-      <legend tabindex="-1">First, your product.</legend><p
-        class="step-caption"
-      >
-        The thing you made. And who you made it for.
+      <legend tabindex="-1">{t.form.legends[0]}</legend><p class="step-caption">
+        {t.form.captions[0]}
       </p>
       <div class="field">
-        <label for="productUrl">Product URL</label><input
+        <label for="productUrl">{t.form.labels.productUrl}</label><input
           id="productUrl"
           name="productUrl"
           type="url"
           autocomplete="url"
-          placeholder="https://your-product.com"
+          placeholder={t.form.placeholders.productUrl}
           required
           maxlength="2048"
           aria-describedby="productUrl-hint productUrl-error"
-        /><p class="hint" id="productUrl-hint">
-          A live link or a publicly accessible preview.
-        </p><p class="field-error" id="productUrl-error" hidden></p>
+        /><p class="hint" id="productUrl-hint">{t.form.hints.productUrl}</p><p
+          class="field-error"
+          id="productUrl-error"
+          hidden
+        >
+        </p>
       </div>
       <div class="field">
-        <label for="description">What does your product do?</label><textarea
+        <label for="description">{t.form.labels.description}</label><textarea
           id="description"
           name="description"
-          placeholder="Who is it for? What does it help them do?"
+          placeholder={t.form.placeholders.description}
           required
           minlength="10"
           maxlength="3000"
@@ -69,84 +109,56 @@
         </p>
       </div>
       <div class="field">
-        <label for="tool">What did you build it with?</label><select
+        <label for="tool">{t.form.labels.tool}</label><select
           id="tool"
           name="tool"
           required
           aria-describedby="tool-error"
-          ><option value="">Choose your main tool</option>{
-            [
-              'Lovable',
-              'Cursor',
-              'Replit',
-              'Bolt',
-              'Claude Code',
-              'Codex',
-              'v0',
-              'Windsurf',
-              'Other',
-            ].map((t) => <option>{t}</option>)
+          ><option value="">{t.form.chooseTool}</option>{
+            tools.map((tool) => (
+              <option value={tool}>{toolLabels[tool] ?? tool}</option>
+            ))
           }</select
         ><p class="field-error" id="tool-error" hidden></p>
       </div>
     </fieldset>
     <fieldset data-step="1" hidden disabled>
-      <legend tabindex="-1">Where are you headed?</legend><p
-        class="step-caption"
-      >
-        So we can focus on what matters for your next step.
+      <legend tabindex="-1">{t.form.legends[1]}</legend><p class="step-caption">
+        {t.form.captions[1]}
       </p><div class="field-grid">
-        <div class="field">
-          <label for="users">Do you already have users?</label><select
-            id="users"
-            name="users"
-            required
-            aria-describedby="users-error"
-            ><option value="">Choose one</option><option>No</option><option
-              >Beta users</option
-            ><option>Yes</option></select
-          ><p class="field-error" id="users-error" hidden></p>
-        </div>
-        <div class="field">
-          <label for="payments">Taking payments?</label><select
-            id="payments"
-            name="payments"
-            required
-            aria-describedby="payments-error"
-            ><option value="">Choose one</option><option>No</option><option
-              >Soon</option
-            ><option>Yes</option></select
-          ><p class="field-error" id="payments-error" hidden></p>
-        </div>
-        <div class="field">
-          <label for="data">Handles customer or personal data?</label><select
-            id="data"
-            name="data"
-            required
-            aria-describedby="data-error"
-            ><option value="">Choose one</option><option>Yes</option><option
-              >No</option
-            ><option>Not sure</option></select
-          ><p class="field-error" id="data-error" hidden></p>
-        </div>
-        <div class="field">
-          <label for="next">What are you planning next?</label><select
-            id="next"
-            name="next"
-            required
-            aria-describedby="next-error"
-            ><option value="">Choose one</option><option>Private testing</option
-            ><option>Public beta</option><option>Launch</option><option
-              >Start charging</option
-            ><option>Scale existing users</option><option>Other</option></select
-          ><p class="field-error" id="next-error" hidden></p>
-        </div>
+        {
+          [
+            { id: 'users', label: t.form.labels.users, items: users },
+            { id: 'payments', label: t.form.labels.payments, items: payments },
+            { id: 'data', label: t.form.labels.data, items: data },
+            { id: 'next', label: t.form.labels.next, items: next },
+          ].map((field) => (
+            <div class="field">
+              <>
+                <label for={field.id}>{field.label}</label>
+                <select
+                  id={field.id}
+                  name={field.id}
+                  required
+                  aria-describedby={`${field.id}-error`}
+                >
+                  <>
+                    <option value="">{t.form.chooseOne}</option>
+                    {field.items.map((item) => (
+                      <option value={item.value}>{item.label}</option>
+                    ))}
+                  </>
+                </select>
+                <p class="field-error" id={`${field.id}-error`} hidden />
+              </>
+            </div>
+          ))
+        }
       </div><div class="field">
-        <label for="uncertainty">What are you most unsure about?</label
-        ><textarea
+        <label for="uncertainty">{t.form.labels.uncertainty}</label><textarea
           id="uncertainty"
           name="uncertainty"
-          placeholder="The thing you'd like a second pair of eyes on."
+          placeholder={t.form.placeholders.uncertainty}
           required
           minlength="5"
           maxlength="3000"
@@ -158,34 +170,36 @@
         </p>
       </div><div class="field">
         <label for="repository"
-          >Repository URL <span class="muted">(optional)</span></label
+          >{t.form.labels.repository}{' '}<span class="muted"
+            >{t.form.labels.optional}</span
+          ></label
         ><input
           id="repository"
           name="repository"
           type="url"
           maxlength="2048"
           aria-describedby="repository-hint repository-error"
-        /><p class="hint" id="repository-hint">
-          No access needed yet. Never include passwords, keys or customer
-          records.
-        </p><p class="field-error" id="repository-error" hidden></p>
+        /><p class="hint" id="repository-hint">{t.form.hints.repository}</p><p
+          class="field-error"
+          id="repository-error"
+          hidden
+        >
+        </p>
       </div>
     </fieldset>
     <fieldset data-step="2" hidden disabled>
-      <legend tabindex="-1">Let's put a name to it.</legend><p
-        class="step-caption"
-      >
-        A real person will reply to you. No mailing lists.
+      <legend tabindex="-1">{t.form.legends[2]}</legend><p class="step-caption">
+        {t.form.captions[2]}
       </p><div class="review-summary">
         <div class="review-heading">
-          <span class="mono">Your brief</span><button
+          <span class="mono">{t.form.brief}</span><button
             type="button"
-            id="edit-brief">Edit details ↗</button
+            id="edit-brief">{t.form.editBrief} ↗</button
           >
         </div><strong id="review-product"></strong><span id="review-stage"
         ></span>
       </div><div class="field">
-        <label for="name">Your name</label><input
+        <label for="name">{t.form.labels.name}</label><input
           id="name"
           name="name"
           required
@@ -195,7 +209,7 @@
           aria-describedby="name-error"
         /><p class="field-error" id="name-error" hidden></p>
       </div><div class="field">
-        <label for="email">Email</label><input
+        <label for="email">{t.form.labels.email}</label><input
           id="email"
           name="email"
           type="email"
@@ -213,17 +227,16 @@
             required
             aria-describedby="consent-error"
           /><span
-            >I have read the <a href="/privacy" class="underline"
-              >privacy notice</a
-            > and agree to be contacted about this request.</span
+            >{t.form.consent.before}<a
+              href={path('privacy', lang)}
+              class="underline">{t.form.consent.link}</a
+            >{t.form.consent.after}</span
           ></label
         ><p class="field-error" id="consent-error" hidden></p>
-      </div><p class="hint">
-        Sending this request is free. We agree any paid work with you first.
-      </p>
+      </div><p class="hint">{t.form.hints.free}</p>
     </fieldset>
     <div class="hp" aria-hidden="true">
-      <label for="website">Leave this field empty</label><input
+      <label for="website">{t.form.labels.honeypot}</label><input
         id="website"
         name="website"
         tabindex="-1"
@@ -231,20 +244,24 @@
       />
     </div>
     <div class="form-alert" id="form-error" role="alert" tabindex="-1" hidden>
-      <strong id="error-title">Let's check that.</strong><p id="error-message">
+      <strong id="error-title">{t.form.errorTitle}</strong><p
+        id="error-message"
+      >
       </p>
     </div><p id="sending-note" class="sending-note" role="status" hidden>
       <span class="spinner" aria-hidden="true"></span><span id="sending-message"
-        >Sending your request. Please keep this tab open.</span
+        >{t.form.sending}</span
       >
     </p><div class="form-actions">
-      <button type="button" class="back-button" id="back" hidden>← Back</button
+      <button type="button" class="back-button" id="back" hidden
+        >← {t.form.back}</button
       ><button type="button" class="button" id="next-button"
-        ><span>Continue</span><span class="button-icon" aria-hidden="true"
-          >→</span
+        ><span>{t.form.continue}</span><span
+          class="button-icon"
+          aria-hidden="true">→</span
         ></button
       ><button type="submit" class="button" id="submit" hidden
-        ><span data-submit-label>Send my request</span><span
+        ><span data-submit-label>{t.form.submit}</span><span
           class="button-icon"
           aria-hidden="true"><span data-submit-icon>↗</span></span
         ></button
@@ -260,19 +277,20 @@
           stroke-width="1.6"
           fill="none"></path></svg
       >
-    </div><p class="eyebrow">Safely on the other side.</p><h2>
-      Got it.<br />Now it's our turn.
+    </div><p class="eyebrow">{t.form.success.eyebrow}</p><h2>
+      {t.form.success.title[0]}<br />{t.form.success.title[1]}
     </h2><p class="muted mt-6">
-      Your request is in. Víctor will review the product and reply to <strong
-        id="success-email">the email you shared</strong
-      >.
+      {t.form.success.body.before}<strong id="success-email"
+        >{t.form.success.body.fallback}</strong
+      >{t.form.success.body.after}
     </p><div class="success-next">
       <p>
-        <strong>What happens next?</strong><br />A conversation about fit, scope
-        and timing. No paid work starts without your agreement.
+        <strong>{t.form.success.nextTitle}</strong><br />{
+          t.form.success.nextCopy
+        }
       </p>
-    </div><a href="/learn" class="text-link mt-6"
-      >A little clarity while you're here ↗</a
+    </div><a href={path('learn', lang)} class="text-link mt-6"
+      >{t.form.success.link} ↗</a
     >
   </div>
 </div>

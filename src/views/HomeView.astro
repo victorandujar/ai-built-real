@@ -1,0 +1,201 @@
+---
+import Base from '@/layouts/Base.astro';
+import Hero from '@/components/sections/Hero.astro';
+import Closing from '@/components/sections/Closing.astro';
+import RealityScenes from '@/components/sections/RealityScenes.astro';
+import ReviewBench from '@/components/sections/ReviewBench.astro';
+import Report from '@/components/reality/Report.astro';
+import { useTranslations, path, articlePath } from '@/i18n';
+import type { Locale } from '@/i18n';
+import { getArticles } from '@/lib/content';
+import { site } from '@/config/site';
+import '@/styles/editorial.css';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const posts = await getArticles(lang);
+---
+
+<Base lang={lang} title={t.meta.homeTitle}
+  ><Hero lang={lang} />
+  <section class="wrap opening-spread" aria-labelledby="opening-title">
+    <div class="opening-margin">
+      <span class="mono">{t.opening.margin}</span><span
+        class="opening-arrow"
+        aria-hidden="true">↳</span
+      >
+    </div>
+    <div class="opening-main">
+      <h2 id="opening-title">
+        {t.opening.title[0]}<br />{t.opening.title[1]}<br /><span
+          class="opening-built"
+          >{t.opening.titleBuilt}<svg
+            aria-hidden="true"
+            viewBox="0 0 600 35"
+            preserveAspectRatio="none"
+            ><path d="M4 22Q290 1 594 12M120 31Q360 12 530 22"></path></svg
+          ></span
+        >
+      </h2><div class="opening-bottom">
+        <p class="editorial-aside">
+          {t.opening.aside[0]}<br /><em>{t.opening.aside[1]}</em>
+        </p><p>{t.opening.copy}</p>
+      </div>
+    </div>
+  </section>
+  <RealityScenes lang={lang} />
+  <ReviewBench lang={lang} />
+  <section class="report-chapter" aria-labelledby="report-heading">
+    <div class="wrap">
+      <div class="chapter-line">
+        <span class="mono">{t.reportChapter.chapter[0]}</span><span class="mono"
+          >{t.reportChapter.chapter[1]}</span
+        >
+      </div>
+      <div class="report-spread">
+        <div class="report-copy">
+          <h2 id="report-heading">
+            {t.reportChapter.heading[0]}<br /><em
+              >{t.reportChapter.headingEm}</em
+            >
+          </h2>{t.reportChapter.copy.map((copy) => <p>{copy}</p>)}<a
+            href={path('check', lang)}
+            class="text-link">{t.reportChapter.link} ↗</a
+          >
+        </div><div class="report-desk">
+          <span class="desk-annotation mono"
+            >{t.reportChapter.deskAnnotation}</span
+          ><div class="report-explorer" data-report-explorer>
+            <div
+              class="report-filters"
+              aria-label={t.reportChapter.filterLabel}
+            >
+              <button type="button" data-filter="all" aria-pressed="true"
+                >{t.reportChapter.filterAll}</button
+              ><button type="button" data-filter="blockers" aria-pressed="false"
+                >{t.reportChapter.filterBlockers}</button
+              >
+            </div>
+            <Report lang={lang} />
+            <p class="report-explore-hint">{t.reportChapter.hint}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="wrap human-interlude" aria-labelledby="human-heading">
+    <div class="human-question">
+      <span class="mono">{t.human.question}</span><h2 id="human-heading">
+        {t.human.title[0]}<br />{t.human.title[1]}{' '}<em>{t.human.titleEm}</em
+        >
+      </h2>
+    </div><div class="human-answer">
+      <span class="answer-mark" aria-hidden="true">↳</span><h3>
+        {t.human.answer[0]}<br />{t.human.answer[1]}
+      </h3><p>{t.human.copy}</p><div class="human-signoff">
+        <span class="signature">{site.founder.name}</span><span class="mono"
+          >{t.human.signoff}</span
+        >
+      </div><a href={path('about', lang)} class="text-link">{t.human.link} ↗</a>
+    </div>
+  </section>
+  <section class="path-chapter">
+    <div class="wrap">
+      <div class="chapter-line">
+        <span class="mono">{t.path.chapter[0]}</span><span class="mono"
+          >{t.path.chapter[1]}</span
+        >
+      </div><div class="path-heading">
+        <h2>{t.path.heading[0]}<br /><em>{t.path.headingEm}</em></h2><p>
+          {t.path.copy[0]}<br />{t.path.copy[1]}
+        </p>
+      </div><ol class="release-path">
+        {
+          t.path.steps.map((step, i) => (
+            <li>
+              <>
+                <span class="path-number" aria-hidden="true">
+                  {i === 2 ? '↗' : `0${i + 1}`}
+                </span>
+                <div class="path-body">
+                  <>
+                    <span class="mono">{step.label}</span>
+                    <h3>
+                      {step.title}
+                      {step.titleEm && (
+                        <>
+                          <br />
+                          <em>{step.titleEm}</em>
+                        </>
+                      )}
+                    </h3>
+                    <p>{step.copy}</p>
+                    {step.link && (
+                      <a
+                        href={
+                          i === 0
+                            ? path('check', lang)
+                            : `${path('check', lang)}?interest=sprint`
+                        }
+                        class="text-link"
+                        data-event={
+                          i === 1 ? 'reality_sprint_clicked' : undefined
+                        }
+                      >
+                        {step.link} ↗
+                      </a>
+                    )}
+                  </>
+                </div>
+              </>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+  <section class="wrap journal-chapter">
+    <div class="journal-heading">
+      <div>
+        <span class="mono">{t.journal.label}</span><h2>
+          {t.journal.heading[0]}<br /><em>{t.journal.headingEm}</em>
+        </h2>
+      </div><a href={path('learn', lang)} class="text-link"
+        >{t.journal.link} ↗</a
+      >
+    </div><div class="journal-shelf">
+      {
+        posts.map((p, i) => (
+          <a
+            class={`journal-volume volume-${i}`}
+            href={articlePath(p.slug, lang)}
+          >
+            <>
+              <div class={`insight-orbit orbit-${i}`} aria-hidden="true">
+                <>
+                  <i />
+                  <i />
+                  <i />
+                  <span>0{i + 1}</span>
+                </>
+              </div>
+              <div class="volume-caption">
+                <>
+                  <span class="mono">{p.data.category}</span>
+                  <h3>{p.data.title}</h3>
+                  <span class="volume-link" aria-hidden="true">
+                    ↗
+                  </span>
+                </>
+              </div>
+            </>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+  <Closing lang={lang} />
+</Base>
+<script src="@/lib/editorial.ts"></script>

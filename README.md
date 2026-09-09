@@ -27,11 +27,14 @@ npm run build
 
 ## Architecture
 
-- `src/config/site.ts`: brand, founder, navigation, prices, feature flags, locale and SEO defaults.
+- `src/config/site.ts`: site URL, founder, prices and feature flags. All copy lives in `src/i18n`.
+- `src/i18n`: locales, the translated route registry, the English and Spanish dictionaries, browser strings and API replies.
+- `src/views`: one shared body per page, rendered by both the English and Spanish routes.
 - `src/styles/global.css`: design tokens, typography, layouts, states, responsive rules and reduced motion.
 - `src/components`: navigation, SEO, layout, form, report and narrative sections.
 - `src/layouts/Base.astro`: semantic document and shared shell.
-- `src/content/learn`: Markdown guides with schema validation and draft filtering.
+- `src/content/learn/<locale>`: Markdown guides with schema validation and draft filtering.
+- `src/content/legal/<locale>`: privacy policy and terms, per language.
 - `src/content/work`: unpublished editorial template for approved case studies.
 - `src/pages`: static public pages; only `/api/leads` is rendered on demand.
 - `src/lib/server`: validated server configuration, lead delivery provider and rate limiting.
@@ -84,11 +87,22 @@ The sitemap excludes private-intent and draft legal routes. Check the generated 
 
 `src/config/landing-pages.ts` defines the future content contract. Empty registry means no low-value generated routes. `/work` remains unlisted until a client-approved case exists.
 
-Astro i18n is configured with English as the default. `src/lib/i18n.ts` defines translated URL handling. Add Spanish only when real translations exist; emit reciprocal hreflang links for those equivalents, never for an untranslated placeholder. Keep current English URLs stable.
+## Languages
+
+The site ships in English and Spanish. English stays at the root (`/about`); Spanish is prefixed and uses translated slugs (`/es/sobre-mi`).
+
+- `src/i18n/routes.ts` is the single source of truth for paths. The nav, the language switcher, the `hreflang` alternates and the sitemap all read from it, so a route cannot exist in one language and point at the wrong page in the other. Add a page by adding its key here first.
+- `src/i18n/en.ts` is the copy source of truth. `src/i18n/es.ts` is typed against it, so a missing translation fails `npm run check` rather than leaking English into the Spanish site.
+- `src/i18n/client.ts` holds the strings browser scripts need, resolved from `<html lang>`. It is kept apart from the page dictionaries so the client bundle does not ship the whole site's copy.
+- `src/i18n/server.ts` holds `/api/leads` replies. The form posts its `locale`; before the body is validated the Accept-Language header is the only hint available.
+- Articles pair across languages through the `translationKey` frontmatter field, not their slugs. The sitemap only emits alternates for registry routes; articles carry theirs in the page head.
+- Form option values stay in English because `lead-schema.ts` validates against them. Only the visible labels are translated.
+
+To add a locale: extend `locales` in `src/i18n/config.ts` and the Astro config, add its column to `routes.ts`, add a dictionary typed against `en.ts`, add the page wrappers under `src/pages/<locale>/`, and add the content folders.
 
 ## Content workflow
 
-Create a Markdown file under `src/content/learn`. Its filename becomes the slug. Required frontmatter:
+Create a Markdown file under `src/content/learn/<locale>`. Its filename becomes the slug, so Spanish articles take Spanish slugs. Required frontmatter:
 
 ```yaml
 title: 'A specific, useful question'
@@ -97,7 +111,10 @@ published: '2026-09-07'
 category: 'Readiness'
 order: 4
 draft: true
+translationKey: 'a-stable-key'
 ```
+
+`translationKey` is shared by an article and its translations; it is what pairs them for the language switcher and the `hreflang` tags.
 
 Write original content with concrete checks, expected results, limits and primary references for technical claims. Preview it, set `draft: false`, and run QA. Add `updated` only when a material revision occurs. Article schema, listing, RSS and sitemap update during build. Do not publish future-dated or unreviewed copy.
 
@@ -107,7 +124,7 @@ Use Astro's `Image` component for future editorial raster imagery; require usefu
 
 No analytics vendor, cookie or external tracking request is enabled. To integrate one, listen for `real-product:analytics` on `window` and forward only the approved event names and non-personal properties. Review privacy and consent requirements for the chosen setup.
 
-Events: `hero_cta_clicked`, `reality_check_started`, `reality_check_step_completed`, `reality_check_submitted`, `reality_check_abandoned`, `pricing_viewed`, `reality_sprint_clicked`, `article_cta_clicked`, `tool_selected`.
+Events: `hero_cta_clicked`, `reality_check_started`, `reality_check_step_completed`, `reality_check_submitted`, `reality_check_abandoned`, `pricing_viewed`, `reality_sprint_clicked`, `article_cta_clicked`, `tool_selected`, `language_switched`.
 
 Abandonment uses `pagehide` and is best effort. A future provider may require beacon support. Do not send product URLs, names, emails or free text as event properties.
 

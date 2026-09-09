@@ -1,4 +1,7 @@
+import { clientStrings } from '@/i18n/client';
+
 export async function initSculpture(host: HTMLElement) {
+  const t = clientStrings();
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const toggle = host.querySelector<HTMLButtonElement>('#assemble')!;
   const pause = host.querySelector<HTMLButtonElement>('#pause-scene')!;
@@ -13,14 +16,14 @@ export async function initSculpture(host: HTMLElement) {
     toggle.setAttribute('aria-pressed', String(assembled));
     toggle.setAttribute(
       'aria-label',
-      assembled ? 'Separate the sculpture' : 'Bring the sculpture together',
+      assembled ? t.sculpture.separateLabel : t.sculpture.assembleLabel,
     );
     host.querySelector('[data-assembly-label]')!.textContent = assembled
-      ? 'See the parts'
-      : 'Bring it together';
+      ? t.sculpture.separate
+      : t.sculpture.assemble;
     status.textContent = assembled
-      ? 'Product: the parts come together.'
-      : 'Prototype: separate parts.';
+      ? t.sculpture.product
+      : t.sculpture.prototype;
     redraw?.();
   });
   if (reduced.matches) return;
@@ -200,8 +203,8 @@ export async function initSculpture(host: HTMLElement) {
           if (idle > 18 && !paused) {
             paused = true;
             pause.setAttribute('aria-pressed', 'true');
-            pause.textContent = 'Resume motion';
-            pause.setAttribute('aria-label', 'Resume 3D motion');
+            pause.textContent = t.motion.resume;
+            pause.setAttribute('aria-label', t.sculpture.resumeLabel);
           }
         };
         const run = () => {
@@ -223,11 +226,11 @@ export async function initSculpture(host: HTMLElement) {
           paused = !paused;
           idle = 0;
           pause.setAttribute('aria-pressed', String(paused));
-          pause.textContent = paused ? 'Resume motion' : 'Pause motion';
+          pause.textContent = paused ? t.motion.resume : t.motion.pause;
           redraw?.();
           pause.setAttribute(
             'aria-label',
-            paused ? 'Resume 3D motion' : 'Pause 3D motion',
+            paused ? t.sculpture.resumeLabel : t.sculpture.pauseLabel,
           );
         });
         const contextLost = (event: Event) => {

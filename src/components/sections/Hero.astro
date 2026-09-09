@@ -1,40 +1,45 @@
 ---
 import Button from '@/components/ui/Button.astro';
 import Sculpture from '@/components/brand/Sculpture.astro';
+import { useTranslations, path } from '@/i18n';
+import type { Locale } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const tools = ['Lovable', 'Cursor', 'Replit', 'Bolt', 'Claude Code', 'Codex'];
 ---
 
 <section class="hero wrap">
   <div class="hero-topline">
     <p class="eyebrow">
-      <span class="live-dot"></span> AI-built → Real-world ready
-    </p><span class="mono">A new beginning, after the build.</span>
+      <span class="live-dot"></span>{' '}{t.hero.eyebrow}
+    </p><span class="mono">{t.hero.kicker}</span>
   </div><div class="hero-grid">
     <div class="hero-copy">
       <h1>
-        <span class="hero-line">Built with AI.</span><span class="hero-line"
-          >Ready for</span
-        ><em class="hero-line">real life.</em>
+        <span class="hero-line">{t.hero.title[0]}</span><span class="hero-line"
+          >{t.hero.title[1]}</span
+        ><em class="hero-line">{t.hero.titleEm}</em>
       </h1><p class="hero-intro">
-        You made something that works.<br />Let's make sure it works <strong
-          >out there.</strong
+        {t.hero.intro[0]}<br />{t.hero.intro[1]}{' '}<strong
+          >{t.hero.introStrong}</strong
         >
       </p><div class="actions">
-        <Button event="hero_cta_clicked" /><a
-          href="/reality-check"
+        <Button lang={lang} event="hero_cta_clicked" /><a
+          href={path('realityCheck', lang)}
           class="text-link"
-          >What happens in a check <span aria-hidden="true">↗</span></a
+          >{t.hero.secondary} <span aria-hidden="true">↗</span></a
         >
-      </div><p class="hero-note">
-        A human review. A clear next move. Still your product.
-      </p>
-    </div><Sculpture />
+      </div><p class="hero-note">{t.hero.note}</p>
+    </div><Sculpture lang={lang} />
   </div><div class="tool-strip">
-    <span class="mono">Built with whatever.<br />Ready for whoever.</span><div
-      class="tool-names"
-    >
-      <span>Lovable</span><span>Cursor</span><span>Replit</span><span>Bolt</span
-      ><span>Claude Code</span><span>Codex</span><span class="muted"
-        >&amp; everything after.</span
+    <span class="mono"
+      >{t.hero.toolsCaption[0]}<br />{t.hero.toolsCaption[1]}</span
+    ><div class="tool-names">
+      {tools.map((tool) => <span>{tool}</span>)}<span class="muted"
+        >{t.hero.toolsSuffix}</span
       >
     </div>
   </div>

@@ -1,0 +1,38 @@
+---
+import Base from '@/layouts/Base.astro';
+import RequestObject from '@/components/brand/RequestObject.astro';
+import CheckForm from '@/components/forms/CheckForm.astro';
+import { site } from '@/config/site';
+import { useTranslations } from '@/i18n';
+import type { Locale } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Base
+  lang={lang}
+  title={t.check.title}
+  description={t.check.description}
+  noindex
+  ><section class="wrap check-intro">
+    <aside class="check-sidebar">
+      <p class="eyebrow"><span class="live-dot"></span> {t.check.eyebrow}</p><h1
+      >
+        {t.check.h1[0]}<br />{t.check.h1[1]}{' '}<em>{t.check.h1Em}</em>
+      </h1><p class="lead muted">
+        {t.check.lead[0]}<br />{t.check.lead[1]}
+      </p><div class="check-facts">
+        {t.check.facts.map((fact) => <span>{fact}</span>)}
+      </div><RequestObject lang={lang} /><div class="founder-line">
+        <strong>{site.founder.name}</strong><p class="hint">
+          {t.check.founderNote}
+        </p>
+      </div><p class="hint mt-8">
+        {t.check.privacyNote[0]}<br />{t.check.privacyNote[1]}
+      </p>
+    </aside><CheckForm lang={lang} />
+  </section></Base
+>

@@ -1,0 +1,32 @@
+---
+import Base from '@/layouts/Base.astro';
+import Closing from '@/components/sections/Closing.astro';
+import { site } from '@/config/site';
+import { useTranslations } from '@/i18n';
+import type { Locale } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Base lang={lang} title={t.about.title} description={t.about.description}
+  ><section class="wrap page-hero">
+    <p class="eyebrow">{t.about.eyebrow}</p><h1>
+      {t.about.h1[0]}<br />{t.about.h1[1]}
+    </h1>
+  </section><section class="wrap section split border-t border-[var(--line)]">
+    <div>
+      <p class="eyebrow">{site.founder.name}</p><h2>
+        {t.about.h2[0]}<br />{t.about.h2[1]}
+      </h2><p class="lead muted mt-8">{t.meta.founderRole}</p>
+    </div><div class="prose">
+      {t.about.body.map((copy) => <p>{copy}</p>)}<h2>{t.about.wheelTitle}</h2>{
+        t.about.wheelBody.map((copy) => <p>{copy}</p>)
+      }<h2>{t.about.expectTitle}</h2><ul>
+        {t.about.expect.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </section><Closing lang={lang} /></Base
+>

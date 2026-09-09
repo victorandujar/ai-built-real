@@ -5,6 +5,7 @@ category: 'Product thinking'
 published: '2026-09-07'
 order: 3
 draft: false
+translationKey: 'real-users'
 ---
 
 A prototype usually has an unusually helpful user: the person who built it. You know what each field expects, which sequence works and which rough edges to avoid.

@@ -1,0 +1,40 @@
+---
+import Base from '@/layouts/Base.astro';
+import Closing from '@/components/sections/Closing.astro';
+import { useTranslations, articlePath } from '@/i18n';
+import type { Locale } from '@/i18n';
+import { getArticles } from '@/lib/content';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const posts = await getArticles(lang);
+---
+
+<Base lang={lang} title={t.learn.title} description={t.learn.description}
+  ><section class="wrap page-hero">
+    <p class="eyebrow">{t.learn.eyebrow}</p><h1>
+      {t.learn.h1[0]}<br />{t.learn.h1[1]}
+    </h1><p class="lead muted">{t.learn.lead}</p>
+  </section><section class="wrap section">
+    <div class="note-list">
+      {
+        posts.map((p) => (
+          <a class="note-link" href={articlePath(p.slug, lang)}>
+            <>
+              <span class="mono">{p.data.category}</span>
+              <div>
+                <>
+                  <h2 class="!text-3xl">{p.data.title}</h2>
+                  <p class="muted mt-4 mb-0">{p.data.description}</p>
+                </>
+              </div>
+              <span aria-hidden="true">↗</span>
+            </>
+          </a>
+        ))
+      }{posts.length === 0 && <p class="muted">{t.learn.empty}</p>}
+    </div>
+  </section><Closing lang={lang} /></Base
+>

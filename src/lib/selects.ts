@@ -1,5 +1,8 @@
+import { clientStrings } from '@/i18n/client';
+
 /** Native form values with an enhanced, keyboard-operated select-only combobox. */
 export function enhanceSelects(form: HTMLFormElement) {
+  const t = clientStrings();
   for (const select of form.querySelectorAll<HTMLSelectElement>('select')) {
     const label = form.querySelector<HTMLLabelElement>(
       `label[for="${select.id}"]`,
@@ -62,7 +65,7 @@ export function enhanceSelects(form: HTMLFormElement) {
       search = '',
       lastKey = 0;
     function sync() {
-      value.textContent = select.selectedOptions[0]?.text || 'Choose one';
+      value.textContent = select.selectedOptions[0]?.text || t.chooseOne;
       trigger.dataset.empty = String(!select.value);
       trigger.setAttribute(
         'aria-invalid',

@@ -1,0 +1,57 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Button from '@/components/ui/Button.astro';
+import { site } from '@/config/site';
+import { useTranslations, path, articlePath, formatDate } from '@/i18n';
+import type { Locale } from '@/i18n';
+import { articleAlternates, articleLocale, articleSlug } from '@/lib/content';
+interface Props {
+  lang: Locale;
+  post: CollectionEntry<'learn'>;
+}
+const { lang, post } = Astro.props;
+const t = useTranslations(lang);
+const { Content } = await render(post);
+// Articles are not in the route registry, so the switcher needs explicit URLs.
+const alternates = Object.fromEntries(
+  (await articleAlternates(post)).map((entry) => {
+    const locale = articleLocale(entry.id);
+    return [locale, articlePath(articleSlug(entry.id), locale)];
+  }),
+) as Partial<Record<Locale, string>>;
+---
+
+<Base
+  lang={lang}
+  title={post.data.title}
+  description={post.data.description}
+  article={post.data}
+  alternates={alternates}
+  ><article>
+    <header class="wrap page-hero">
+      <div class="breadcrumbs">
+        <a href={path('home', lang)}>{t.common.home}</a> / <a
+          href={path('learn', lang)}>{t.learn.breadcrumb}</a
+        > / {post.data.category}
+      </div><p class="eyebrow">{post.data.category}</p><h1>
+        {post.data.title}
+      </h1><p class="lead muted">{post.data.description}</p><p class="mono">
+        <a href={path('about', lang)}>{site.founder.name}</a> · <time
+          datetime={post.data.published}
+          >{formatDate(post.data.published, lang)}</time
+        >
+      </p>
+    </header><div class="wrap section border-t border-[var(--line)]">
+      <div class="prose">
+        <Content /><aside class="notice mt-12">
+          <h2 class="!mt-0">{t.learn.articleCtaTitle}</h2><p>
+            {t.learn.articleCtaCopy}
+          </p><Button lang={lang} event="article_cta_clicked" />
+        </aside><a class="text-link mt-8" href={path('learn', lang)}
+          >← {t.learn.backToNotes}</a
+        >
+      </div>
+    </div>
+  </article></Base
+>

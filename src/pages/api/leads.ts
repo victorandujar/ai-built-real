@@ -1,5 +1,8 @@
 import type { APIRoute } from 'astro';
 import { leadSchema } from '@/lib/lead-schema';
+import { apiMessage, localeFromRequest } from '@/i18n/server';
+import type { ApiMessage } from '@/i18n/server';
+import type { Locale } from '@/i18n';
 import {
   leadProvider,
   ProviderUnavailable,
@@ -9,27 +12,31 @@ import { allowRequest } from '@/lib/server/rate-limit';
 export const prerender = false;
 const reply = (
   status: number,
-  message: string,
+  locale: Locale,
+  key: ApiMessage,
   extra: Record<string, string> = {},
 ) =>
-  new Response(JSON.stringify({ message }), {
+  new Response(JSON.stringify({ message: apiMessage(locale, key) }), {
     status,
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-store',
+      'Content-Language': locale,
       ...extra,
     },
   });
 export const POST: APIRoute = async ({ request, clientAddress }) => {
+  // Before the body is validated the only locale hint is the browser's own.
+  let locale = localeFromRequest(request);
   if (request.headers.get('origin') !== new URL(request.url).origin)
-    return reply(403, 'Please submit from this website.');
+    return reply(403, locale, 'wrongOrigin');
   if (!request.headers.get('content-type')?.includes('application/json'))
-    return reply(415, 'Use the product form.');
+    return reply(415, locale, 'useForm');
   if (Number(request.headers.get('content-length') || 0) > 20000)
-    return reply(413, 'Your request is too long.');
+    return reply(413, locale, 'tooLong');
   try {
     const reader = request.body?.getReader();
-    if (!reader) return reply(400, 'Please complete the form.');
+    if (!reader) return reply(400, locale, 'incomplete');
     let size = 0;
     const chunks: Uint8Array[] = [];
     while (true) {
@@ -38,7 +45,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       size += value.byteLength;
       if (size > 20000) {
         await reader.cancel();
-        return reply(413, 'Your request is too long.');
+        return reply(413, locale, 'tooLong');
       }
       chunks.push(value);
     }
@@ -47,28 +54,20 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     try {
       body = JSON.parse(raw);
     } catch {
-      return reply(400, 'Please check your form and try again.');
+      return reply(400, locale, 'checkForm');
     }
     const parsed = leadSchema.safeParse(body);
-    if (!parsed.success)
-      return reply(
-        422,
-        'Please complete every required field with valid details.',
-      );
+    if (!parsed.success) return reply(422, locale, 'invalid');
+    locale = parsed.data.locale;
     if (!(await allowRequest(clientAddress)))
-      return reply(429, 'Too many attempts. Please try again in ten minutes.', {
-        'Retry-After': '600',
-      });
+      return reply(429, locale, 'rateLimited', { 'Retry-After': '600' });
     // Key derived from validated payload keeps network retries idempotent.
     const { createHash } = await import('node:crypto');
     const id = createHash('sha256')
       .update(JSON.stringify(parsed.data))
       .digest('hex');
     await leadProvider.submit(parsed.data, id);
-    return reply(
-      200,
-      'Request received. We’ll review the fit and contact you by email.',
-    );
+    return reply(200, locale, 'received');
   } catch (error) {
     if (error instanceof SenderDomainUnverified) {
       console.error(
@@ -76,19 +75,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       );
       return reply(
         503,
-        import.meta.env.DEV
-          ? 'The sender domain is not verified in Resend. Verify the domain used in RESEND_FROM, then try again. Your details have not been sent.'
-          : 'Email delivery is temporarily unavailable. Your details have not been sent. Please try again later.',
+        locale,
+        import.meta.env.DEV ? 'unverifiedDev' : 'unverified',
       );
     }
     if (error instanceof ProviderUnavailable)
-      return reply(
-        503,
-        'Requests are not open yet. Your details have not been sent. Please try again later.',
-      );
-    return reply(
-      503,
-      'We could not confirm delivery. Please try again later. Your entries are still here.',
-    );
+      return reply(503, locale, 'notOpen');
+    return reply(503, locale, 'unconfirmed');
   }
 };

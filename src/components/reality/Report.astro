@@ -1,36 +1,39 @@
-<div
-  class="report report-dimensional"
-  aria-label="Illustrative Reality Check report"
->
+---
+import { useTranslations } from '@/i18n';
+import type { Locale } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const rows = t.report.rows.map((label, i) => ({
+  label,
+  status:
+    i < 2 ? t.report.blocker : i === 2 ? t.report.fixSoon : t.report.fineForNow,
+  warn: i < 2,
+}));
+---
+
+<div class="report report-dimensional" aria-label={t.report.ariaLabel}>
   <div class="report-top">
-    <span class="mono">↳ Reality report</span><span class="status-pill"
-      >Illustrative example</span
+    <span class="mono">↳ {t.report.top}</span><span class="status-pill"
+      >{t.report.badge}</span
     >
   </div><div class="report-status">
-    <span class="eyebrow"><span class="dot"></span> Your next move</span><h3>
-      Ship after fixes.
-    </h3><p class="hint">
-      The core journey works. Fix access and payment recovery first.
-    </p>
-  </div><div class="report-row">
-    <span>Another account can open a private project</span><span
-      class="status-pill warn">Blocker</span
-    >
-  </div><div class="report-row">
-    <span>Failed checkout has no recovery path</span><span
-      class="status-pill warn">Blocker</span
-    >
-  </div><div class="report-row">
-    <span>Errors don't reach anyone</span><span class="status-pill"
-      >Fix soon</span
-    >
-  </div><div class="report-row">
-    <span>Onboarding gets a new user to value</span><span class="status-pill"
-      >Fine for now</span
-    >
-  </div><div class="report-bottom">
-    <span>Priorities. Evidence. A clear next step.</span><span
-      aria-hidden="true">↗</span
-    >
+    <span class="eyebrow"><span class="dot"></span> {t.report.statusLabel}</span
+    ><h3>{t.report.statusTitle}</h3><p class="hint">{t.report.statusHint}</p>
+  </div>{
+    rows.map((row) => (
+      <div class="report-row">
+        <>
+          <span>{row.label}</span>
+          <span class:list={['status-pill', { warn: row.warn }]}>
+            {row.status}
+          </span>
+        </>
+      </div>
+    ))
+  }<div class="report-bottom">
+    <span>{t.report.bottom}</span><span aria-hidden="true">↗</span>
   </div>
 </div>

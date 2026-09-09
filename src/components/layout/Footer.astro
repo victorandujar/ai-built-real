@@ -1,21 +1,32 @@
 ---
-import { site } from '@/config/site';
+import { useTranslations, path } from '@/i18n';
+import type { Locale, RouteKey } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <footer class="wrap footer">
   <div class="footer-top">
-    <a class="brand" href="/">real product.</a><div class="footer-links">
-      <a href="/reality-check">Reality Check</a><a href="/learn">Field notes</a
-      ><a href="/about">About</a>
+    <a class="brand" href={path('home', lang)}>{t.footer.brand}</a><div
+      class="footer-links"
+    >
+      {
+        t.nav.items.map((item) => (
+          <a href={path(item.key as RouteKey, lang)}>{item.label}</a>
+        ))
+      }
     </div>
   </div><div class="footer-bottom">
     <span
       >© {new Date().getFullYear()}{' '}
-      {site.shortName}. Built for what comes next.</span
+      {t.meta.shortName}. {t.footer.tagline}</span
     ><div class="footer-links">
-      <a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/rss.xml"
-        >RSS</a
-      >
-    </div><span>A human on the other side.</span>
+      <a href={path('privacy', lang)}>{t.footer.privacy}</a><a
+        href={path('terms', lang)}>{t.footer.terms}</a
+      ><a href={path('rss', lang)}>{t.footer.rss}</a>
+    </div><span>{t.footer.human}</span>
   </div>
 </footer>

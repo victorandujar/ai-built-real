@@ -1,3 +1,13 @@
+---
+import { useTranslations } from '@/i18n';
+import type { Locale } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
 <div class="request-object request-orbital" data-request-object data-stage="0">
   <div class="request-orbits" aria-hidden="true">
     <i></i><i></i><i></i><div class="request-core">
@@ -12,19 +22,22 @@
           cx="50"
           cy="50"
           r="2"
-          fill="#8b3928"></circle></svg>
+          fill="#8b3928"></circle></svg
+      >
     </div>
-    <span class="request-node node-product">PRODUCT</span>
-    <span class="request-node node-context">CONTEXT</span>
-    <span class="request-node node-human">YOU</span>
+    <span class="request-node node-product">{t.check.compassNodes.product}</span
+    >
+    <span class="request-node node-context">{t.check.compassNodes.context}</span
+    >
+    <span class="request-node node-human">{t.check.compassNodes.human}</span>
   </div>
   <div class="brief-caption">
-    <span class="mono">A clearer picture, one step at a time.</span>
-    <span data-brief-caption>01 — Start with what you built.</span>
+    <span class="mono">{t.check.compassCaption}</span>
+    <span data-brief-caption>{t.form.briefCaptions[0]}</span>
   </div>
   <button class="compass-motion" type="button" aria-pressed="false" hidden
     ><span aria-hidden="true">Ⅱ</span>
-    <span data-motion-label>Pause motion</span></button
+    <span data-motion-label>{t.common.pauseMotion}</span></button
   >
 </div>
 <script src="@/lib/request-compass.ts"></script>

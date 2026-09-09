@@ -1,33 +1,64 @@
 ---
-import { site } from '@/config/site';
 import Button from '@/components/ui/Button.astro';
+import {
+  useTranslations,
+  path,
+  translatePath,
+  locales,
+  localeNames,
+  localeTags,
+} from '@/i18n';
+import type { Locale, RouteKey } from '@/i18n';
+interface Props {
+  lang: Locale;
+  /** Set on pages whose counterpart is not in the route registry (articles). */
+  alternates?: Partial<Record<Locale, string>>;
+}
+const { lang, alternates } = Astro.props;
+const t = useTranslations(lang);
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const other = locales.filter((locale) => locale !== lang);
 ---
 
 <header class="wrap">
-  <nav class="nav" aria-label="Main navigation">
-    <a class="brand" href="/" aria-label="AI-built to Real product home"
+  <nav class="nav" aria-label={t.nav.label}>
+    <a class="brand" href={path('home', lang)} aria-label={t.nav.brandHome}
       ><svg width="27" height="30" viewBox="0 0 27 30" aria-hidden="true"
         ><path d="M0 30V0h27v30h-8V8H8v22Z" fill="currentColor"></path></svg
       ><span>real<br />product<span class="brand-period">.</span></span></a
     ><span class="nav-caption mono"
-      >Independent product readiness<br />For the ones who built it.</span
+      >{t.nav.caption[0]}<br />{t.nav.caption[1]}</span
     ><button
       class="menu-button"
       aria-expanded="false"
       aria-controls="navigation"
-      ><span>Menu</span><span class="menu-glyph" aria-hidden="true">+</span
+      ><span>{t.nav.menu}</span><span class="menu-glyph" aria-hidden="true"
+        >+</span
       ></button
     ><div class="nav-links" id="navigation">
       {
-        site.navigation.map((item) => (
+        t.nav.items.map((item) => {
+          const href = path(item.key as RouteKey, lang);
+          return (
+            <a href={href} aria-current={current === href ? 'page' : undefined}>
+              {item.label}
+            </a>
+          );
+        })
+      }{
+        other.map((locale) => (
           <a
-            href={item.href}
-            aria-current={Astro.url.pathname === item.href ? 'page' : undefined}
+            class="lang-switch"
+            href={translatePath(current, locale, alternates)}
+            lang={localeTags[locale]}
+            hreflang={localeTags[locale]}
+            aria-label={localeNames[locale]}
+            data-event="language_switched"
           >
-            {item.label}
+            <span aria-hidden="true">{locale.toUpperCase()}</span>
           </a>
         ))
-      }<Button label="Let's look at it" />
+      }<Button lang={lang} label={t.nav.cta} />
     </div>
   </nav>
 </header>

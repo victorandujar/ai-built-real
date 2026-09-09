@@ -1,5 +1,8 @@
 import { animate } from 'animejs';
 import { mountRealitySculpture } from './reality-sculpture';
+import { clientStrings } from '@/i18n/client';
+
+const t = clientStrings();
 mountRealitySculpture();
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 for (const host of document.querySelectorAll<HTMLElement>('[data-scenes]')) {
@@ -72,10 +75,10 @@ for (const panel of document.querySelectorAll<HTMLElement>(
     slider.setAttribute(
       'aria-valuetext',
       value === 0
-        ? 'Front perspective'
+        ? t.perspective.front
         : value === 100
-          ? 'Side perspective'
-          : `Perspective ${value}%`,
+          ? t.perspective.side
+          : t.perspective.partial(value),
     );
     scene.dispatchEvent(
       new CustomEvent('reality:perspective', { detail: value }),
@@ -105,32 +108,11 @@ for (const panel of document.querySelectorAll<HTMLElement>(
 }
 
 // Findings remain explicitly illustrative; interaction explains priorities, not scan results.
-const examples = [
-  [
-    'Why it matters',
-    'A private project should stay private even when someone guesses its address.',
-    'Next action',
-    'Enforce ownership on the server, then repeat the same request from a second account.',
-  ],
-  [
-    'Why it matters',
-    'A successful payment is not enough if the customer never receives access.',
-    'Next action',
-    'Make payment handling safe to repeat and provide a recovery path when the handoff fails.',
-  ],
-  [
-    'Why it matters',
-    'An error that nobody sees can keep affecting people long after the first failure.',
-    'Next action',
-    'Capture the important failure and give the person operating the product enough context to respond.',
-  ],
-  [
-    'Why it matters',
-    'The essential journey already helps a new user reach a useful result.',
-    'Next action',
-    'Keep it. Focus the next release on the blockers rather than rebuilding a working flow.',
-  ],
-];
+const examples = t.findings.items.flatMap((item) => [
+  [t.findings.why, item.why],
+  [t.findings.next, item.next],
+]);
+
 for (const host of document.querySelectorAll<HTMLElement>(
   '[data-report-explorer]',
 )) {
@@ -152,12 +134,12 @@ for (const host of document.querySelectorAll<HTMLElement>(
     detail.id = `finding-detail-${i}`;
     detail.hidden = true;
     button.setAttribute('aria-controls', detail.id);
-    for (let j = 0; j < 4; j += 2) {
+    for (const [term, copy] of examples.slice(i * 2, i * 2 + 2)) {
       const label = document.createElement('strong');
-      label.textContent = examples[i][j];
-      const copy = document.createElement('p');
-      copy.textContent = examples[i][j + 1];
-      detail.append(label, copy);
+      label.textContent = term;
+      const body = document.createElement('p');
+      body.textContent = copy;
+      detail.append(label, body);
     }
     row.append(button, detail);
     button.addEventListener('click', () => {

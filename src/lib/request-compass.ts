@@ -1,4 +1,7 @@
 import { animate } from 'animejs';
+import { clientStrings } from '@/i18n/client';
+
+const t = clientStrings();
 
 for (const host of document.querySelectorAll<HTMLElement>('.request-orbital')) {
   const rings = host.querySelectorAll<HTMLElement>('.request-orbits > i');
@@ -65,7 +68,7 @@ for (const host of document.querySelectorAll<HTMLElement>('.request-orbital')) {
     if (!running) point();
     button.hidden = reduced.matches;
     button.setAttribute('aria-pressed', String(paused));
-    label.textContent = paused ? 'Resume motion' : 'Pause motion';
+    label.textContent = paused ? t.motion.resume : t.motion.pause;
     button.firstElementChild!.textContent = paused ? '▷' : 'Ⅱ';
   }
   button.addEventListener('click', () => {

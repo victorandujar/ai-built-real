@@ -1,0 +1,112 @@
+---
+import Base from '@/layouts/Base.astro';
+import Coverage from '@/components/reality/Coverage.astro';
+import Report from '@/components/reality/Report.astro';
+import Closing from '@/components/sections/Closing.astro';
+import Button from '@/components/ui/Button.astro';
+import { site } from '@/config/site';
+import { useTranslations, path } from '@/i18n';
+import type { Locale } from '@/i18n';
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Base
+  lang={lang}
+  title={t.realityCheck.title}
+  description={t.realityCheck.description}
+  ><section class="wrap page-hero">
+    <div class="breadcrumbs">
+      <a href={path('home', lang)}>{t.common.home}</a> / {
+        t.realityCheck.breadcrumb
+      }
+    </div><p class="eyebrow">{t.realityCheck.eyebrow}</p><h1>
+      {t.realityCheck.h1[0]}<br />{t.realityCheck.h1[1]}
+    </h1><p class="lead muted">{t.realityCheck.lead}</p><Button lang={lang} />
+  </section><section class="wrap section split border-t border-[var(--line)]">
+    <div>
+      <p class="eyebrow">{t.realityCheck.lookEyebrow}</p><h2>
+        {t.realityCheck.lookTitle[0]}<br />{t.realityCheck.lookTitle[1]}
+      </h2><p class="muted mt-8">{t.realityCheck.lookCopy}</p><p class="notice">
+        {t.realityCheck.lookNotice}
+      </p>
+    </div><Coverage lang={lang} />
+  </section><section class="wrap section split border-t border-[var(--line)]">
+    <div>
+      <p class="eyebrow">{t.realityCheck.getEyebrow}</p><h2>
+        {
+          t.realityCheck.getTitle.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))
+        }
+      </h2><p class="lead muted mt-8">{t.realityCheck.getLead}</p><ul
+        class="list-disc space-y-3 pl-5"
+      >
+        {
+          t.realityCheck.getList.map((item) => (
+            <li>
+              <>
+                <strong>{item.term}</strong> {item.copy}
+              </>
+            </li>
+          ))
+        }
+      </ul><div class="outcomes">
+        {t.realityCheck.outcomes.map((outcome) => <span>{outcome}</span>)}
+      </div>
+    </div><Report lang={lang} />
+  </section><section
+    class="wrap section border-t border-[var(--line)]"
+    data-track-pricing
+  >
+    <div class="split">
+      <div>
+        <p class="eyebrow">{t.realityCheck.scopeEyebrow}</p><h2>
+          {t.realityCheck.scopeTitle[0]}<br />{t.realityCheck.scopeTitle[1]}
+        </h2>
+      </div><div>
+        <h3>
+          {
+            site.prices.check
+              ? `${t.realityCheck.priceLabel} · €${site.prices.check}`
+              : t.realityCheck.priceUnset
+          }
+        </h3><p class="muted mt-6">{t.realityCheck.scopeCopy}</p><Button
+          lang={lang}
+        /><h3 class="mt-12">{t.realityCheck.sprintTitle}</h3><p
+          class="muted mt-4"
+        >
+          {t.realityCheck.sprintCopy}
+        </p><a
+          class="text-link"
+          data-event="reality_sprint_clicked"
+          href={`${path('check', lang)}?interest=sprint`}
+          >{t.realityCheck.sprintLink} ↗</a
+        >
+      </div>
+    </div>
+  </section><section class="wrap section border-t border-[var(--line)]">
+    <div class="split">
+      <h2>
+        {t.realityCheck.faqTitle[0]}<br />{t.realityCheck.faqTitle[1]}
+      </h2><div>
+        {
+          t.realityCheck.faq.map((item) => (
+            <details>
+              <>
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section><Closing lang={lang} /></Base
+>
